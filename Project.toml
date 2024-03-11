@@ -1,0 +1,17 @@
+name = "GivEmExel"
+uuid = "dcf505f5-2bf4-45cb-8fef-5f56a3c0e7fc"
+authors = ["Eben60"]
+version = "0.1.0"
+
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+NativeFileDialog = "e1fe445b-aa65-4df4-81c1-2041507f0fd4"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
+
+[compat]
+julia = "1.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
