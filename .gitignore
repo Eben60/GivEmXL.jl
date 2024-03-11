@@ -23,4 +23,4 @@ Manifest.toml
 
 auxillary
 lcov.info
-.vscode/*
+.vscode/
