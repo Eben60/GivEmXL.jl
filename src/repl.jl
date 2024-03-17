@@ -1,4 +1,4 @@
-function repl(; basedir=nothing)
+function repl(parse_cl; basedir=nothing)
     # imgtype = nothing
     # while true
     #     println("Select the plots output format")
@@ -16,6 +16,13 @@ function repl(; basedir=nothing)
     #     end
     #     !isnothing(imgtype) && break
     # end
+
+
+    emptykwargs = (; )
+    # parse_args = parse_commandline()
+    cl_args = isempty(ARGS) ? emptykwargs : to_nt(parse_cl())
+    isempty(cl_args) || @show cl_args
+
     if isnothing(basedir) && @has_preference("basedir")
         basedir = @load_preference("basedir")
         !isdir(basedir) && (basedir=nothing)

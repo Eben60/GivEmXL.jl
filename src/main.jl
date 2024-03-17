@@ -4,5 +4,7 @@ Pkg.activate(basedir)
 
 using GivEmExel
 
-rslt = repl(; ) # basedir)
+
+# @show cl_args
+rslt = repl(parse_commandline; ) # basedir)
 ;
