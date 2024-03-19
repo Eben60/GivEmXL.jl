@@ -1,6 +1,6 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-JLSCRIPT="$SCRIPT_DIR/src/maintest.jl"
+JLSCRIPT="$SCRIPT_DIR/src/tmp2-main.jl"
 
-julia $JLSCRIPT "$@"
+julia --project=$SCRIPT_DIR $JLSCRIPT $@

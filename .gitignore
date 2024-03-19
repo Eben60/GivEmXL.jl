@@ -25,3 +25,8 @@ LocalPreferences.toml
 auxillary
 lcov.info
 .vscode/
+
+src/tmp*
+tmp*
+test*
+src/olds/*
