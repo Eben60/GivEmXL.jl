@@ -23,9 +23,8 @@ function proc_ARGS()
 
     allkeys = keys(args)
     filter!(x -> x != "help", allkeys)
-    # @show allkeys
 
-    return [argpair(k, args) for k in allkeys]
+    return NamedTuple(argpair(k, args) for k in allkeys)
 
 end
 
