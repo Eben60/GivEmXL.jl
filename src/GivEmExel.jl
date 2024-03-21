@@ -3,7 +3,7 @@ using Unitful, DataFrames, XLSX, Preferences
 using NativeFileDialog: pick_file
 
 export pick_file, @load_preference, @set_preferences!, @has_preference
-export parse_cl_string, argpair
+export parse_cl_string
 export repl
 
 # temporary exports
