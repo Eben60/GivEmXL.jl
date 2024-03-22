@@ -19,7 +19,7 @@ function test_prompt()
     cli_args = parse_cl_string(answer)
 
     parse_args!(args; cli_args)
-    nt = nt_args(args)
+    nt = args_pairs(args)
     @show nt
     return nt
 end
@@ -50,9 +50,9 @@ function prompt_and_parse(pp::PromptedParser)
     answer = readline()
     cli_args = parse_cl_string(answer)
     parse_args!(pp, cli_args)
-    nt = nt_args(pp)
-    return nt
+    ps = args_pairs(pp)
+    return ps
 end
 
-
+pp = testpp()
 prompt_and_parse(pp)

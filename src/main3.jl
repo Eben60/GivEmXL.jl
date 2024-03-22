@@ -19,7 +19,7 @@ function proc_ARGS()
     # show help if being asked
     get_value(args, "--help")  && help(args, color="cyan")
 
-    return nt_args(args)
+    return args_pairs(args)
 end
 
 
