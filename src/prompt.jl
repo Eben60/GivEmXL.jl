@@ -34,7 +34,7 @@ function testpp()
     add_argument!(pp, "-f", "--fileformat"; 
             type=String, 
             required=false, 
-            default="",
+            # default="",
             description="Accepted file format (e.g. DOC, TXT, RTF)",
             )
     
