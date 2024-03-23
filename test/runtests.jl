@@ -18,5 +18,8 @@ using Test, Unitful
 
 # @test nt1.area == nt_setup.area
 # @test nt2.area == nt_exp2.area
+
+@test mergent([:a=>1, :b=>2], (;a="7"), [:c=>8]) == (;a="7", b=2, c=8)
+
 end
 ;

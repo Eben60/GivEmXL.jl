@@ -12,7 +12,7 @@ export SimpleArgParse
 
 # temporary exports
 export read_units, nt_skipmissing, merge_params, process_data, keys_skipmissing, merge_params, 
-    parse_commandline, to_nt, get_xl
+    parse_commandline, to_nt, get_xl, mergent
 
 include("process_data.jl")
 include("parse_ARGS.jl")

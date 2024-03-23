@@ -44,5 +44,6 @@ function merge_params(df_exp, df_setup, row)
     nt = nt2unitful(nt_unitless, nt_units)
 
     return (;nt,nt_exp, nt_setup, nt_unitless)
-
 end
+
+mergent(args...) = merge((;), [NamedTuple(a) for a in args]...)
