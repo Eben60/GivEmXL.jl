@@ -25,6 +25,7 @@ function s2unit(s)
 end
 
 read_units(df_setup) = NamedTuple((k, s2unit(v)) for (k, v) in pairs(df_setup[2, :]))
+read_units(d::Nothing) = (;)
 
 # keys_skipmissing(nt) = [k for (k, v) in pairs(nt) if !ismissing(v)]
 
@@ -38,8 +39,8 @@ function nt2unitful(nt, ntunits)
 end
 
 function merge_params(df_exp, df_setup, row)
-    nt_exp = NamedTuple(df_exp[row, :]) |> nt_skipmissing
-    nt_setup = NamedTuple(df_setup[1, :]) |> nt_skipmissing
+    nt_setup = isnothing(df_setup) ? (;) : (NamedTuple(df_setup[1, :]) |> nt_skipmissing)
+    nt_exp = isnothing(df_exp) ? (;) : (NamedTuple(df_exp[row, :]) |> nt_skipmissing)
     nt_units = read_units(df_setup)
     nt_unitless = merge(nt_setup, nt_exp)
     nt = nt2unitful(nt_unitless, nt_units)

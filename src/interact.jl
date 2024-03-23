@@ -69,9 +69,17 @@ function full_interact(pp0, pps)
 
         (; df_setup, df_exp) = xlargs
 
-        isnothing(df_setup) || (setup = mergent(specargs, df_setup))
+        if isnothing(df_exp) & isnothing(df_setup)
+            exper_parts = [(;)]
+        elseif isnothing(df_exp)
+            exper_parts = [merge_params(nothing, df_setup, nothing).nt]
+        else
+            exper_parts = [merge_params(df_exp, df_setup, row).nt for row in 1:nrow(df_exp)]
+        end
 
-        @show xlargs
+        exper_parts = merge.(Ref(specargs), exper_parts)
+
+        @show exper_parts
         (;abort, argpairs) = prompt_and_parse(pps.next_file)
         abort && return nothing 
     end
