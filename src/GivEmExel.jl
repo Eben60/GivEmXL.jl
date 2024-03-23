@@ -11,7 +11,7 @@ export emptyargs, prompt_and_parse, proc_ARGS, full_interact
 export SimpleArgParse
 
 # temporary exports
-export read_units, nt_skipmissing, merge_params, process_data, keys_skipmissing, merge_params, 
+export read_units, nt_skipmissing, merge_params, keys_skipmissing, merge_params, 
     parse_commandline, to_nt, get_xl, mergent
 
 include("process_data.jl")

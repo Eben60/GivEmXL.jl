@@ -80,3 +80,10 @@ exelfile_prompt = let
 
     pp
 end
+
+function demo_fn(; kwargs...)
+    println(typeof(kwargs))
+    for kw in kwargs
+        @show kw
+    end
+end

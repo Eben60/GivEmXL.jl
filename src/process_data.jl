@@ -1,6 +1,3 @@
-# function process_data(f_src)
-#     read_xl_paramtables(f_src)
-# end
 
 function remove_comments(df)
     col1 = df[!, 1]
