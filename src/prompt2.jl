@@ -4,29 +4,6 @@ using GivEmExel
 using Preferences
 using NativeFileDialog: pick_file
 
-function test_prompt()
-    args::ArgumentParser = ArgumentParser(description="CLI prompt test example.", add_help=true)
-    add_argument!(args, "-f", "--fileformat"; 
-            type=String, 
-            required=false, 
-            default="",
-            description="Accepted file format (e.g. DOC, TXT, RTF)",
-            )
-    
-    add_example!(args, "julia main.jl --fileformat ODT")
-    add_example!(args, "julia main.jl --help")
-
-    colorprint("informative text", "cyan")
-    colorprint("prompt> ", "cyan", false)
-    answer = readline()
-    cli_args = parse_cl_string(answer)
-
-    parse_args!(args; cli_args)
-    nt = args_pairs(args)
-    @show nt
-    return nt
-end
-
 emptyargs() = Pair{Symbol, Any}[]
 
 include("prompt2-init.jl")
