@@ -23,11 +23,7 @@ function repl(parse_cl; basedir=nothing)
     cl_args = isempty(ARGS) ? emptykwargs : to_nt(parse_cl())
     isempty(cl_args) || @show cl_args
 
-    if isnothing(basedir) && @has_preference("basedir")
-        basedir = @load_preference("basedir")
-        !isdir(basedir) && (basedir=nothing)
-    end
-    isnothing(basedir) && (basedir = homedir())
+
 
     rslt = nothing
     while true

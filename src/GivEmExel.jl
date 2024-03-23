@@ -8,11 +8,12 @@ export repl
 
 # temporary exports
 export read_units, nt_skipmissing, merge_params, process_data, keys_skipmissing, merge_params, 
-    parse_commandline, to_nt
+    parse_commandline, to_nt, get_xl
 
 include("process_data.jl")
 include("parse_ARGS.jl")
 include("utils.jl")
 include("repl.jl")
+include("get_xl.jl")
 
 end

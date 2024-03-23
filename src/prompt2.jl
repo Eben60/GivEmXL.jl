@@ -1,6 +1,9 @@
 using SimpleArgParse
 using GivEmExel
 
+using Preferences
+using NativeFileDialog: pick_file
+
 function test_prompt()
     args::ArgumentParser = ArgumentParser(description="CLI prompt test example.", add_help=true)
     add_argument!(args, "-f", "--fileformat"; 
@@ -64,8 +67,9 @@ function proc_ARGS(pp0)
     return (;proceed, argpairs = ps0)
 end
 
+
 function full_interact(pp0, pps)
-    allargpairs = typeof(emptyargs())[]
+    allargpairs = []
     (;proceed, argpairs) = proc_ARGS(pp0)
     proceed || return nothing
     push!(allargpairs, argpairs)
@@ -77,8 +81,13 @@ function full_interact(pp0, pps)
             break
         end
     end
-    
+
+    (;proceed, argpairs) = get_xl()
+
+    proceed && push!(allargpairs, argpairs)
     @show allargpairs
+
+
     return nothing
 end
 
