@@ -30,7 +30,48 @@ gen_options = let
             )
     
     add_example!(pp, "$(pp.prompt) --plotformat SVG")
-    add_example!(pp, "$(pp.prompt) - SVG")
+    add_example!(pp, "$(pp.prompt) -p SVG")
+    add_example!(pp, "$(pp.prompt) --help")
+    pp
+end
+
+
+spec_options = nothing
+
+spec_options = let
+    pp = PromptedParser(; parser = ArgumentParser(description="Prompt for specific options", add_help=true), 
+                        color = "cyan", 
+                        introduction="please enter specific options",
+                        prompt="GivEmExel> ",
+                        )
+
+    add_argument!(pp, "-b", "--binary", 
+            type=Bool, 
+            default=false, 
+            description="Binary mode switch.",
+            )            
+
+    add_example!(pp, "$(pp.prompt) --binary")
+    add_example!(pp, "$(pp.prompt) -b")
+    add_example!(pp, "$(pp.prompt) --help")
+    pp
+end
+
+next_file = let
+    pp = PromptedParser(; parser = ArgumentParser(description="Prompt for next file", add_help=true), 
+                        color = "cyan", 
+                        introduction="press <ENTER> to process next file, of -a<ENTER> to abort ",
+                        prompt="GivEmExel> ",
+                        )
+
+    add_argument!(pp, "-a", "--abort", 
+            type=Bool, 
+            default=false, 
+            description="Abort switch.",
+            )            
+
+    add_example!(pp, "$(pp.prompt) --abort")
+    add_example!(pp, "$(pp.prompt) -a")
     add_example!(pp, "$(pp.prompt) --help")
     pp
 end

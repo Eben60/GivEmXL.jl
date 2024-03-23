@@ -19,5 +19,5 @@ function get_xl(; basedir=nothing)
         end
         println("Completed processing $fname")
     end
-    return (;proceed, argpairs=rslt)
+    return (;proceed, xlargs=rslt)
 end
