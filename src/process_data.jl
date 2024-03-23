@@ -1,6 +1,6 @@
-function process_data(f_src)
-    read_xl_paramtables(f_src)
-end
+# function process_data(f_src)
+#     read_xl_paramtables(f_src)
+# end
 
 function remove_comments(df)
     col1 = df[!, 1]
@@ -10,9 +10,10 @@ end
 
 read_xl_removecomments(f_src, tablename) = DataFrame(XLSX.readtable(f_src, tablename; infer_eltypes=true)) |> remove_comments
 
-function read_xl_paramtables(f_src)
-    df_setup = read_xl_removecomments(f_src, "params_setup")
-    df_exp = read_xl_removecomments(f_src, "params_experiment")
+function read_xl_paramtables(f_src; paramtables=(;setup="params_setup", exper="params_experiment"))
+    (; setup, exper) = paramtables
+    df_setup = isnothing(setup) ? nothing : read_xl_removecomments(f_src, setup)
+    df_exp = isnothing(exper) ? nothing : read_xl_removecomments(f_src, exper)
     return (;df_setup, df_exp)
 end
 

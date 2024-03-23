@@ -66,14 +66,19 @@ function full_interact(pp0, pps)
         specargs = mergent(commonargs, argpairs)
         (;abort, xlargs) = get_xl()
         abort && return nothing 
+
+        (; df_setup, df_exp) = xlargs
+
+        isnothing(df_setup) || (setup = mergent(specargs, df_setup))
+
+        @show xlargs
         (;abort, argpairs) = prompt_and_parse(pps.next_file)
         abort && return nothing 
     end
 
-    
 
-    proceed && push!(allargpairs, argpairs)
-    @show allargpairs
+    # proceed && push!(allargpairs, argpairs)
+    # @show allargpairs
 
 
     return nothing
