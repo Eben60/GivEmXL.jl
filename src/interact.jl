@@ -51,6 +51,9 @@ function full_interact(pp0, pps)
         end
     end
 
+    @show allargpairs
+    commonargs = mergent(allargpairs)
+
     (;proceed, argpairs) = get_xl()
 
     proceed && push!(allargpairs, argpairs)

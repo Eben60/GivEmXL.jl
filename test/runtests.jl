@@ -3,7 +3,8 @@ using Test, Unitful
 
 @testset "GivEmExel" begin
 
-(;df_setup, df_exp) = process_data("data/testset.xlsx")
+p = joinpath(@__DIR__, "..", "data/testset.xlsx")
+(;df_setup, df_exp) = process_data(p)
 (nt1, nt_exp1, nt_setup) = merge_params(df_exp, df_setup, 1)
 (nt2, nt_exp2, ) = merge_params(df_exp, df_setup, 2)
 
