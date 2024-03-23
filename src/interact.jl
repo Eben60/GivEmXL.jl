@@ -60,8 +60,20 @@ function exper_paramsets(specargs, df_exp, df_setup)
     return p_sets
 end
 
-function full_interact(pp0, pps)
+function full_interact(pp0, pps; 
+        basedir=nothing, 
+        paramtables = (;setup="params_setup", exper="params_experiment"),
+        getexel=false,
+        getdata=(; dialogtype = :none),
+        )
+
+    # getdata = merge((;dialogtype=:none, filterlist="", basedir=nothing), getdata)
+    pps = merge((;gen_options=nothing, spec_options=nothing, 
+        exelfile_prompt=nothing, next_file=nothing,
+        datafiles_prompt=nothing,
+        ), pps)
     allargpairs = []
+
     (;abort, argpairs) = proc_ARGS(pp0)
     abort && return nothing
     push!(allargpairs, argpairs)
@@ -77,13 +89,23 @@ function full_interact(pp0, pps)
         (;abort, argpairs) = prompt_and_parse(pps.spec_options)
         abort && return nothing 
         specargs = mergent(commonargs, argpairs)
-        (;abort, xlargs) = get_xl()
-        abort && return nothing 
 
-        (; df_setup, df_exp) = xlargs
+        if getexel
+            (;abort, ) = prompt_and_parse(pps.exelfile_prompt)
+            abort && return nothing 
+            (;abort, xlargs) = get_xl(; basedir, paramtables)
+            abort && return nothing 
 
-        exper_parts = exper_paramsets(specargs, df_exp, df_setup)
+            (; df_setup, df_exp) = xlargs
+            exper_parts = exper_paramsets(specargs, df_exp, df_setup)
+        else
+            exper_parts = specargs
+        end
 
+        if getdata.dialogtype != :none
+            (;abort, ) = prompt_and_parse(pps.datafiles_prompt)
+            (;abort, datafiles) = get_data(;getdata...)          
+        end
         @show exper_parts
         (;abort, argpairs) = prompt_and_parse(pps.next_file)
         abort && return nothing 

@@ -62,16 +62,21 @@ next_file = let
                         color = "cyan", 
                         introduction="press <ENTER> to process next file, of -a<ENTER> to abort ",
                         prompt="GivEmExel> ",
-                        )
-
-    add_argument!(pp, "-a", "--abort", 
-            type=Bool, 
-            default=false, 
-            description="Abort switch.",
-            )            
+                        )         
 
     add_example!(pp, "$(pp.prompt) --abort")
     add_example!(pp, "$(pp.prompt) -a")
     add_example!(pp, "$(pp.prompt) --help")
+    pp
+end
+
+exelfile_prompt = let
+    pp = PromptedParser(; parser = ArgumentParser(description="Prompt for Excel file", add_help=true), 
+                        color = "cyan", 
+                        introduction="press <ENTER>, then select Excel file.",
+                        prompt="GivEmExel> ",
+                        )
+    
+
     pp
 end

@@ -1,6 +1,6 @@
 module GivEmExel
 using Unitful, DataFrames, XLSX, Preferences
-using NativeFileDialog: pick_file
+using NativeFileDialog: pick_file, pick_multi_file, pick_folder
 using SimpleArgParse
 
 export pick_file, @load_preference, @set_preferences!, @has_preference
