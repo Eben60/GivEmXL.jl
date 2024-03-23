@@ -7,9 +7,9 @@ function get_xl(; basedir=nothing)
     isnothing(basedir) && (basedir = homedir())
 
     fname = pick_file(basedir, filterlist = "xlsx")
-    proceed = !isempty(fname) 
+    abort = isempty(fname) 
     rslt = (; )
-    if proceed
+    if !abort
         basedir = splitdir(fname)[1]
         try
             rslt = process_data(fname)
@@ -19,5 +19,5 @@ function get_xl(; basedir=nothing)
         end
         println("Completed processing $fname")
     end
-    return (;proceed, xlargs=rslt)
+    return (;abort, xlargs=rslt)
 end

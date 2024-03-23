@@ -2,23 +2,33 @@
 emptyargs() = Pair{Symbol, Any}[]
 
 function prompt_and_parse(pp)
-    proceed = true
+    add_argument!(pp, "-a", "--abort", 
+            type=Bool, 
+            default=false, 
+            description="Abort switch.",
+            ) 
     color = pp.color
-    colorprint(pp.introduction, color)
-    colorprint(pp.prompt, color, false)
-    answer = readline()
-    cli_args = parse_cl_string(answer)
-    parse_args!(pp, cli_args)
-    ps = args_pairs(pp)
-    if get_value(pp, "--help")  
-        help(pp)
-        proceed = false
-        ps = emptyargs() # ignore other ARGS, if --help
+    ps = nothing
+
+    while true
+        colorprint(pp.introduction, color)
+        colorprint(pp.prompt, color, false)
+        answer = readline()
+        cli_args = parse_cl_string(answer)
+        parse_args!(pp, cli_args)
+        ps = args_pairs(pp)
+        get_value(pp, "--abort") && return (;abort=true, argpairs=emptyargs())
+        if get_value(pp, "--help")  
+            help(pp)
+            ps = emptyargs() # ignore other ARGS, if --help
+        else
+            break
+        end
     end
-    return (;proceed, argpairs = ps)
+    return (;abort=false, argpairs = ps)
 end
 
-prompt_and_parse(pp::Nothing) = (;proceed=true, argpairs = emptyargs())
+prompt_and_parse(pp::Nothing) = (;abort=false, argpairs = emptyargs())
 
 function proc_ARGS(pp0)
     proceed = true
@@ -32,36 +42,32 @@ function proc_ARGS(pp0)
     else
         ps0 = emptyargs()
     end
-    return (;proceed, argpairs = ps0)
+    return (;abort = !proceed, argpairs = ps0)
 end
 
 proc_ARGS(pp::Nothing) = prompt_and_parse(pp) 
 
 function full_interact(pp0, pps)
     allargpairs = []
-    (;proceed, argpairs) = proc_ARGS(pp0)
-    proceed || return nothing
+    (;abort, argpairs) = proc_ARGS(pp0)
+    abort && return nothing
     push!(allargpairs, argpairs)
 
-    while true
-        (;proceed, argpairs) = prompt_and_parse(pps.gen_options)
-        if proceed
-            push!(allargpairs, argpairs)
-            break
-        end
-    end
+    (;abort, argpairs) = prompt_and_parse(pps.gen_options)
+    abort && return nothing 
+    push!(allargpairs, argpairs)
 
     @show allargpairs
     commonargs = mergent(allargpairs)
 
-    while proceed
-        (;proceed, argpairs) = prompt_and_parse(pps.spec_options)
+    while !abort
+        (;abort, argpairs) = prompt_and_parse(pps.spec_options)
+        abort && return nothing 
         specargs = mergent(commonargs, argpairs)
-        (;proceed, xlargs) = get_xl()
-        (;proceed, argpairs) = prompt_and_parse(pps.next_file)
-        ab = mergent((;abort=false,), argpairs)
-        proceed &= !ab.abort
-
+        (;abort, xlargs) = get_xl()
+        abort && return nothing 
+        (;abort, argpairs) = prompt_and_parse(pps.next_file)
+        abort && return nothing 
     end
 
     
