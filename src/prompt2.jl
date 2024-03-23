@@ -26,7 +26,7 @@ end
 
 emptyargs() = Pair{Symbol, Any}[]
 
-function makepp0()
+pp0 = let
     pp = PromptedParser(; parser = ArgumentParser(description="Command line options parser", add_help=true), 
                         color = "magenta", )
 
@@ -39,10 +39,11 @@ function makepp0()
     
     add_example!(pp, "$(pp.prompt) --fileformat ODT")
     add_example!(pp, "$(pp.prompt) --help")
-    return pp
+    pp
 end
 
-function make_gen_options()
+
+gen_options = let
     pp = PromptedParser(; parser = ArgumentParser(description="Prompt for general options", add_help=true), 
                         color = "cyan", 
                         introduction="please enter desired plot output format",
@@ -57,8 +58,9 @@ function make_gen_options()
             )
     
     add_example!(pp, "$(pp.prompt) --plotformat SVG")
+    add_example!(pp, "$(pp.prompt) - SVG")
     add_example!(pp, "$(pp.prompt) --help")
-    return pp
+    pp
 end
 
 function prompt_and_parse(pp)
@@ -116,8 +118,8 @@ end
 
 
 # pp = testpp()
-pp0 = makepp0()
-pps = (;gen_options = make_gen_options())
+# pp0 = makepp0()
+pps = (;gen_options)
 
 fi = full_interact(pp0, pps)
 
