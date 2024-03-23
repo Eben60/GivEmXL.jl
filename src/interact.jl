@@ -47,6 +47,19 @@ end
 
 proc_ARGS(pp::Nothing) = prompt_and_parse(pp) 
 
+function exper_paramsets(specargs, df_exp, df_setup)
+    if isnothing(df_exp) & isnothing(df_setup)
+        p_sets = [(;)]
+    elseif isnothing(df_exp)
+        p_sets = [merge_params(nothing, df_setup, nothing).nt]
+    else
+        p_sets = [merge_params(df_exp, df_setup, row).nt for row in 1:nrow(df_exp)]
+    end
+
+    p_sets = merge.(Ref(specargs), p_sets)
+    return p_sets
+end
+
 function full_interact(pp0, pps)
     allargpairs = []
     (;abort, argpairs) = proc_ARGS(pp0)
@@ -60,7 +73,7 @@ function full_interact(pp0, pps)
     @show allargpairs
     commonargs = mergent(allargpairs)
 
-    while !abort
+    while true
         (;abort, argpairs) = prompt_and_parse(pps.spec_options)
         abort && return nothing 
         specargs = mergent(commonargs, argpairs)
@@ -69,15 +82,7 @@ function full_interact(pp0, pps)
 
         (; df_setup, df_exp) = xlargs
 
-        if isnothing(df_exp) & isnothing(df_setup)
-            exper_parts = [(;)]
-        elseif isnothing(df_exp)
-            exper_parts = [merge_params(nothing, df_setup, nothing).nt]
-        else
-            exper_parts = [merge_params(df_exp, df_setup, row).nt for row in 1:nrow(df_exp)]
-        end
-
-        exper_parts = merge.(Ref(specargs), exper_parts)
+        exper_parts = exper_paramsets(specargs, df_exp, df_setup)
 
         @show exper_parts
         (;abort, argpairs) = prompt_and_parse(pps.next_file)

@@ -1,5 +1,5 @@
 function get_xl(; basedir=nothing, paramtables = (;setup="params_setup", exper="params_experiment"), skip=false)
-    skip && return (;abort=false, xlargs=nothing)
+    skip && return (;abort=false, xlargs=nothing, fname=nothing)
 
     if isnothing(basedir) && @has_preference("basedir")
         basedir = @load_preference("basedir")
@@ -20,5 +20,5 @@ function get_xl(; basedir=nothing, paramtables = (;setup="params_setup", exper="
         end
         println("Completed processing $fname")
     end
-    return (;abort, xlargs=rslt)
+    return (;abort, xlargs=rslt, fname)
 end
