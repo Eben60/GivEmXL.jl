@@ -1,3 +1,6 @@
+function parse_cl_string(s) 
+    return string.(Base.shell_split(s))
+end
 
 emptyargs() = Pair{Symbol, Any}[]
 
