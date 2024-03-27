@@ -1,5 +1,5 @@
 using GivEmExel
-using SimpleArgParse
+using GivEmExel.InternalArgParse
 
 include("prompt2-init.jl")
 
