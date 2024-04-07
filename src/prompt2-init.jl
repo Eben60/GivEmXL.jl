@@ -1,5 +1,6 @@
 pp0 = let
-    pp = PromptedParser(; parser = ArgumentParser(description="Command line options parser", add_help=true), 
+    pp = ArgumentParser(; description="Command line options parser", 
+                        add_help=true, 
                         color = "magenta", )
 
     add_argument!(pp, "-f", "--fileformat"; 
@@ -16,7 +17,8 @@ end
 
 
 gen_options = let
-    pp = PromptedParser(; parser = ArgumentParser(description="Prompt for general options", add_help=true), 
+    pp = ArgumentParser(; description="Prompt for general options", 
+                        add_help=true, 
                         color = "cyan", 
                         introduction="please enter desired plot output format",
                         prompt="GivEmExel> ",
@@ -39,7 +41,8 @@ end
 spec_options = nothing
 
 spec_options = let
-    pp = PromptedParser(; parser = ArgumentParser(description="Prompt for specific options", add_help=true), 
+    pp = ArgumentParser(; description="Prompt for specific options", 
+                        add_help=true, 
                         color = "cyan", 
                         introduction="please enter specific options",
                         prompt="GivEmExel> ",
@@ -58,7 +61,8 @@ spec_options = let
 end
 
 next_file = let
-    pp = PromptedParser(; parser = ArgumentParser(description="Prompt for next file", add_help=true), 
+    pp = ArgumentParser(; description="Prompt for next file", 
+                        add_help=true, 
                         color = "cyan", 
                         introduction="press <ENTER> to process next file, of -a<ENTER> to abort ",
                         prompt="GivEmExel> ",
@@ -71,7 +75,8 @@ next_file = let
 end
 
 exelfile_prompt = let
-    pp = PromptedParser(; parser = ArgumentParser(description="Prompt for Excel file", add_help=true), 
+    pp = ArgumentParser(; description="Prompt for Excel file", 
+                        add_help=true, 
                         color = "cyan", 
                         introduction="press <ENTER>, then select Excel file.",
                         prompt="GivEmExel> ",
