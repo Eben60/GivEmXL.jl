@@ -4,21 +4,28 @@ end
 
 emptyargs() = Pair{Symbol, Any}[]
 
-function prompt_and_parse(pp)
+function prompt_and_parse(pp; interactive=true)
     add_argument!(pp, "-a", "--abort", 
             type=Bool, 
             default=false, 
             description="Abort switch.",
             ) 
-    color = pp.color
+    color = pp.interactive.color
     ps = nothing
 
     while true
-        colorprint(pp.introduction, color)
-        colorprint(pp.prompt, color, false)
+        colorprint(pp.interactive.introduction, color)
+        colorprint(pp.interactive.prompt, color, false)
         answer = readline()
         cli_args = parse_cl_string(answer)
-        parse_args!(pp; cli_args)
+        r = parse_args!(pp; cli_args)
+        # if r isa Exception
+        #     colorprint(r.msg, color)
+        #     help(pp)
+        #     interactive || return (;abort=true, argpairs = emptyargs())
+        #     continue
+        # end
+
         ps = args_pairs(pp)
         get_value(pp, "--abort") && return (;abort=true, argpairs=emptyargs())
         if get_value(pp, "--help")  

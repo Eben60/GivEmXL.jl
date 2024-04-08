@@ -20,8 +20,6 @@ arg2strkey(arg) = lstrip(arg, '-')
 """
     add_argument!(parser::ArgumentParser, arg_short::String="", arg_long::String=""; kwargs...) → parser
 
-Function `add_argument!` is exported
-
 # Arguments
 - `parser::ArgumentParser`: ArgumentParser object instance.
 - `arg_short::String=""`: short argument flag.
@@ -34,6 +32,8 @@ Function `add_argument!` is exported
 - `positional::Bool=false`
 - `description::String=nothing`
 - `validator::Union{AbstractValidator, Nothing}=nothing` 
+
+Function `add_argument!` is exported
 """
 function add_argument!(parser::ArgumentParser, arg_short::String="", arg_long::String="";
     type::Type=Any, required=false, positional=false, default=nothing, description::String="", validator=nothing)
@@ -143,7 +143,7 @@ function update_val!(parser, numkey, value)
     value = try
         value = vals.type == Any ? value : _parse(vals.type, value)
     catch e
-        e isa ArgumentError && return _error(parser.throw_on_exception, "cannot parse $value into $(vals.type)")
+        e isa ArgumentError && return _error(throw_on_exception(parser), "cannot parse $value into $(vals.type)")
     end
 
     return set_value!(parser, numkey, value)
@@ -160,7 +160,7 @@ Parses arguments, validates them and stores the updated values in the parser.
     e.g. `["--foo", "FOO", "-i", "1"]`
 
 # Throws
-- `Exception`: depending on the value of `parser.throw_on_exception`, in case of non-valid 
+- `Exception`: depending on the value of `parser.interactive`, in case of non-valid 
     args vector, the function will either throw imediately, or return `e <: Exception` to be 
     processed downstream.
 
@@ -190,7 +190,7 @@ function parse_args!(parser::ArgumentParser; cli_args=nothing)
             nextarg += 1
         else
             posargs_exhausted = true
-            (isnothing(pa.value) | pa.required) && return _error(parser.throw_on_exception, "Value for positional argument $(canonicalname(pa)) not supplied")
+            (isnothing(pa.value) | pa.required) && return _error(throw_on_exception(parser), "Value for positional argument $(canonicalname(pa)) not supplied")
         end
     end
 
@@ -198,9 +198,9 @@ function parse_args!(parser::ArgumentParser; cli_args=nothing)
         arg::String = cli_args[i]
         argkey::String = arg2strkey(arg)
         if startswith(arg, "-")
-            !haskey(parser.arg_store, argkey) && return _error(parser.throw_on_exception, "Argument not found: $(arg). Call `add_argument` before parsing.")
+            !haskey(parser.arg_store, argkey) && return _error(throw_on_exception(parser), "Argument not found: $(arg). Call `add_argument` before parsing.")
             numkey::UInt16 = parser.arg_store[argkey]
-            !haskey(parser.kv_store, numkey) && return _error(parser.throw_on_exception, "Key not found for argument: $(arg)"; excp=ErrorException)
+            !haskey(parser.kv_store, numkey) && return _error(throw_on_exception(parser), "Key not found for argument: $(arg)"; excp=ErrorException)
         else
             continue
         end
@@ -212,7 +212,7 @@ function parse_args!(parser::ArgumentParser; cli_args=nothing)
             value = cli_args[i+1]
             i += 1
         else
-            return _error(parser.throw_on_exception, "Value failed to parse for arg: $(arg)")
+            return _error(throw_on_exception(parser), "Value failed to parse for arg: $(arg)")
         end
         uv = update_val!(parser, numkey, value)
         uv isa Exception && return uv
@@ -231,7 +231,7 @@ Get argument value from parser.
 - `arg::AbstractString=""`: argument name, e.g. `"-f"`, `"--foo"`.
 
 # Throws
-- `Exception`: depending on the value of `parser.throw_on_exception::Bool`, if the argument not 
+- `Exception`: depending on the value of `throw_on_exception(parser)`, if the argument not 
     found, the function will either throw imediately, or return `e <: Exception` to be 
     processed downstream.
 
@@ -239,7 +239,7 @@ Function `get_value` is exported.
 """
 function get_value(parser::ArgumentParser, arg::AbstractString)
     argkey::String = arg2strkey(arg)
-    !haskey(parser.arg_store, argkey) && return _error(parser.throw_on_exception, "Argument not found: $(arg). Run `add_argument` first.")
+    !haskey(parser.arg_store, argkey) && return _error(throw_on_exception(parser), "Argument not found: $(arg). Run `add_argument` first.")
     numkey::UInt16 = parser.arg_store[argkey]
     value::Any = haskey(parser.kv_store, numkey) ? parser.kv_store[numkey].value : nothing
     return value
@@ -265,28 +265,28 @@ end
 Set/update value of argument, validating it, as specified by `numkey` or `argname`, in parser.
 
 # Throws
-- `Exception`: depending on the value of `throw_on_exception` kwarg, if the argument not 
+- `Exception`: depending on the value of `throw_on_exception` , if the argument not 
     found, the function will either throw imediately, or return `e <: Exception` to be 
     processed downstream.
 
 Function `set_value!` is exported.
 """
 function set_value!(parser::ArgumentParser, numkey::Integer, value::Any)
-    throw_on_exception = parser.throw_on_exception
-    !haskey(parser.kv_store, numkey) && return _error(throw_on_exception, "Key not found in store.")
+    thr_on_exc = throw_on_exception(parser)
+    !haskey(parser.kv_store, numkey) && return _error(thr_on_exc, "Key not found in store.")
     vals::ArgumentValues = parser.kv_store[numkey]
     vld = vals.validator
     value = convert(vals.type, value)
     (ok, value) = validate(value, vld)
-    ok || return _error(throw_on_exception, "$value is not a valid value for arg $(canonicalname(vals.args))") 
+    ok || return _error(thr_on_exc, "$value is not a valid value for arg $(canonicalname(vals.args))") 
     parser.kv_store[numkey] = ArgumentValues(vals.args, value, vals.type, vals.required, vals.positional, vals.description, vals.validator)
     return parser
 end
 
 function set_value!(parser::ArgumentParser, argname::AbstractString, value::Any)
-    throw_on_exception = parser.throw_on_exception
+    thr_on_exc =throw_on_exception(parser)
     strkey = arg2strkey(argname)
-    !haskey(parser.arg_store, strkey) && return _error(throw_on_exception, "Argument not found in store.")
+    !haskey(parser.arg_store, strkey) && return _error(thr_on_exc, "Argument not found in store.")
     numkey = parser.arg_store[strkey]
     return set_value!(parser, numkey, value)
 end
@@ -299,7 +299,7 @@ processed downstream.
 
 Function `_error` is internal.
 """
-_error(throw_on_exception, msg; excp=ArgumentError) = throw_on_exception ? throw(excp(msg)) : excp(msg) 
+_error(thr_on_exc, msg; excp=ArgumentError) = thr_on_exc ? throw(excp(msg)) : excp(msg) 
 
 # Type conversion helper methods.
 _parse(x, y) = parse(x, y)
