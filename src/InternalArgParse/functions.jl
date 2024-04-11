@@ -126,7 +126,7 @@ end
 Print usage/help message.
 """
 function help(parser::ArgumentParser; color=nothing)
-    isnothing(color) && (color = parser.color)
+    color = getcolor(parser, color)
     colorprint(parser.usage, color)
     return nothing
 end
@@ -168,7 +168,7 @@ Function `parse_args!` is exported.
 """
 function parse_args!(parser::ArgumentParser; cli_args=nothing)
     isnothing(cli_args) && (cli_args=ARGS)
-    if parser.add_help
+    if parser.add_help && !haskey(parser, "help")
         parser = add_argument!(parser, "-h", "--help", type=Bool, default=false, description="Print the help message.")
         parser.usage = generate_usage!(parser)
     end

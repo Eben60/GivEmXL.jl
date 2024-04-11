@@ -47,9 +47,24 @@ function colorize(text::AbstractString; color::AbstractString="default", backgro
 end
 
 """
-    colorprint(text, color="default", newline=true; background=false, bright=false) → nothing
+    getcolor(parser::ArgumentParser, color=nothing)  → color::String
 
-Print colored text into stdout. For color table, see help to internal `colorize` function.
+Returns `color` in case second arg is defined, otherwise the color defined in `parser`, or "default".
+
+Function `getcolor` is public, not exported.
+"""
+function getcolor(parser::ArgumentParser, color=nothing) 
+    !isnothing(color) && return color   
+    return (isnothing(parser.interactive) || isnothing(parser.interactive.color)) ? 
+        "default" : parser.interactive.color
+end
+
+"""
+    colorprint(text, color="default", newline=true; background=false, bright=false) → nothing
+    colorprint(text, parser::ArgumentParser, newline=true; background=false, bright=false) → nothing
+
+Print colored text into stdout. For color table, see help to internal `colorize` function. 
+If second arg is an `ArgumentParser`, uses color as defined within, if any, otherwise uses `default`.
 
 Function `colorprint` is exported.
 """
@@ -57,6 +72,9 @@ function colorprint(text, color="default", newline=true; background=false, brigh
     print(colorize(text; color, background, bright))
     newline && println()
 end
+
+colorprint(text, parser::ArgumentParser, newline=true; background=false, bright=false) = 
+    colorprint(text, getcolor(parser), newline; background, bright)
 
 argpair(s, parser) = Symbol(s) => get_value(parser, s)
 
@@ -87,3 +105,6 @@ positional_args(parser::ArgumentParser) = [x for x in values(parser.kv_store) if
 throw_on_exception(::Nothing) = true
 throw_on_exception(parser::ArgumentParser) = throw_on_exception(parser.interactive)
 throw_on_exception(x::InteractiveUsage) = x.throw_on_exception
+
+Base.haskey(parser::ArgumentParser, key::AbstractString) = haskey(parser.arg_store, arg2strkey(key))   
+Base.haskey(parser::ArgumentParser, key::Integer) = haskey(parser.kv_store, key)

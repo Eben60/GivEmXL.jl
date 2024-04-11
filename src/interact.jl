@@ -1,16 +1,17 @@
 function parse_cl_string(s) 
-    return string.(Base.shell_split(s))
+    return string.(shell_split(s))
 end
 
 emptyargs() = Pair{Symbol, Any}[]
 
-function prompt_and_parse(pp; interactive=true)
+function prompt_and_parse(pp)
+    interactive = !isnothing(pp.interactive)
     add_argument!(pp, "-a", "--abort", 
             type=Bool, 
             default=false, 
             description="Abort switch.",
             ) 
-    color = pp.interactive.color
+    color = getcolor(pp)
     ps = nothing
 
     while true
@@ -19,17 +20,18 @@ function prompt_and_parse(pp; interactive=true)
         answer = readline()
         cli_args = parse_cl_string(answer)
         r = parse_args!(pp; cli_args)
-        # if r isa Exception
-        #     colorprint(r.msg, color)
-        #     help(pp)
-        #     interactive || return (;abort=true, argpairs = emptyargs())
-        #     continue
-        # end
+        if r isa Exception
+            colorprint(r.msg, color)
+            help(pp)
+            interactive || return (;abort=true, argpairs = emptyargs())
+            continue
+        end
 
         ps = args_pairs(pp)
         get_value(pp, "--abort") && return (;abort=true, argpairs=emptyargs())
         if get_value(pp, "--help")  
             help(pp)
+            set_value!(pp, "--help", false)
             ps = emptyargs() # ignore other ARGS, if --help
         else
             break
@@ -43,8 +45,10 @@ prompt_and_parse(pp::Nothing) = (;abort=false, argpairs = emptyargs())
 function proc_ARGS(pp0)
     proceed = true
     if !isnothing(pp0)
-        parse_args!(pp0)
-        if get_value(pp0, "--help")  
+        p = parse_args!(pp0)
+        exc = p isa Exception
+        if exc || get_value(pp0, "--help") 
+            exc && colorprint("error parsing supplied arguments", pp0)
             help(pp0)
             proceed = false
         end
@@ -85,6 +89,7 @@ function full_interact(pp0, pps, proc_data_fn;
     allargpairs = []
 
     (;abort, argpairs) = proc_ARGS(pp0)
+    @show (;abort, argpairs)
     abort && return nothing
     push!(allargpairs, argpairs)
 
