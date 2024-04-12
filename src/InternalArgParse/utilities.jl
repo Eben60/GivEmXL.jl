@@ -106,5 +106,9 @@ throw_on_exception(::Nothing) = true
 throw_on_exception(parser::ArgumentParser) = throw_on_exception(parser.interactive)
 throw_on_exception(x::InteractiveUsage) = x.throw_on_exception
 
+"""
+    haskey(parser::ArgumentParser, key::AbstractString) → ::Bool
+    haskey(parser::ArgumentParser, key::Integer) → ::Bool
+"""
 Base.haskey(parser::ArgumentParser, key::AbstractString) = haskey(parser.arg_store, arg2strkey(key))   
 Base.haskey(parser::ArgumentParser, key::Integer) = haskey(parser.kv_store, key)

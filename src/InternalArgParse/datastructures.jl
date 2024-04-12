@@ -22,7 +22,6 @@ Command-line argument values.
 - `const args::ArgForms`
 - `value::Any`
 - `const type::Type = Any`
-- `const required::Bool = false`
 - `const positional::Bool = false`
 - `const description::String = ""`
 - `const validator::Union{AbstractValidator, Nothing} = nothing`
@@ -31,7 +30,6 @@ Command-line argument values.
     const args::ArgForms
     value::Any
     const type::Type = Any
-    const required::Bool = false
     const positional::Bool = false
     const description::String = ""
     const validator::Union{AbstractValidator, Nothing} = nothing
@@ -62,7 +60,6 @@ Command-line argument parser with numkey-value stores and attributes.
 # Fields
 ## stores
 - `kv_store::OrderedDict{UInt16,ArgumentValues} = OrderedDict()`: `numkey => value` 
-    store: { numkey: ArgumentValues(value, type, required, help) }; up to 65,536 argument keys
 - `arg_store::OrderedDict{String,UInt16} = OrderedDict()`: numkey-value store: `arg => numkey`
 - `lng::UInt16 = 0`: counter of stored args
 ## attributes

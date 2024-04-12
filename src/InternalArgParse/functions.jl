@@ -28,7 +28,6 @@ arg2strkey(arg) = lstrip(arg, '-')
 # Keywords
 - `type::Type=nothing`: type, the argument value to be parsed/converted into.
 - `default::Any=nothing`
-- `required::Bool=false`
 - `positional::Bool=false`
 - `description::String=nothing`
 - `validator::Union{AbstractValidator, Nothing}=nothing` 
@@ -36,13 +35,11 @@ arg2strkey(arg) = lstrip(arg, '-')
 Function `add_argument!` is exported
 """
 function add_argument!(parser::ArgumentParser, arg_short::String="", arg_long::String="";
-    type::Type=Any, required=false, positional=false, default=nothing, description::String="", validator=nothing)
+    type::Type=Any, positional=false, default=nothing, description::String="", validator=nothing)
 
     args::ArgForms = ArgForms(arg_short, arg_long)
     arg::String = !isempty(arg_long) ? arg_long : !isempty(arg_short) ? arg_short : ""
-        isempty(arg) && throw(ArgumentError("Argument(s) missing. See usage examples."))
-    isnothing(default) && positional && !required && 
-        error("Error adding argument for $arg_long, $arg_short. Optional positional argument must have a valid default value")    
+        isempty(arg) && throw(ArgumentError("Argument(s) missing. See usage examples.")) 
 
     haskey(parser.arg_store, arg2strkey(arg_short)) && error("Cannot add argument: Key $arg_short already present.")
     haskey(parser.arg_store, arg2strkey(arg_long)) && error("Cannot add argument: Key $arg_short already present.")
@@ -55,7 +52,7 @@ function add_argument!(parser::ArgumentParser, arg_short::String="", arg_long::S
     default = (type == Any) | isnothing(default) ? default : convert(type, default)
     (ok, default) = validate(default, validator)
     ok || throw(ArgumentError("invalid default value $default for arg $(canonicalname(args))")) 
-    vals::ArgumentValues = ArgumentValues(args, default, type, required, positional, description, validator)
+    vals::ArgumentValues = ArgumentValues(args, default, type, positional, description, validator)
     parser.kv_store[numkey] = vals
     return parser
 end
@@ -68,6 +65,47 @@ Function `add_example!` is exported.
 function add_example!(parser::ArgumentParser, example::AbstractString)
     push!(parser.examples, example)
     return parser
+end
+
+"""
+    sort_args(parser::ArgumentParser) → (;pos_args, keyed_args, all_args)
+
+Function `sort_args` is internal.
+"""
+function sort_args(parser)
+    pos_args = ArgumentValues[]
+    keyed_args = ArgumentValues[]
+
+    for v in values(parser.kv_store)
+        if v.positional
+            push!(pos_args, v)
+        else
+            push!(keyed_args, v)
+        end      
+    end
+    all_args = [pos_args; keyed_args]
+    return (;pos_args, keyed_args, all_args)
+end
+
+"""
+    argument_usage(v::ArgumentValues) → (; u=args_usage, o=options)
+
+Function `sort_args` is internal.
+"""
+function argument_usage(v)
+    isrequired = isnothing(v.value)
+    args_vec::Vector{String} = args2vec(v.args)
+    # example: String -> "<STRING>"
+    type::String = v.type != Bool ? string(" ", join("<>", uppercase(string(v.type)))) : ""
+    # example: (i,input) -> "[-i|--input <STRING>]"
+    args_usage::String = v.positional ? type : string(join(hyphenate.(args_vec), "|"), type)
+    !isrequired && (args_usage = join("[]", args_usage))
+    # example: (i,input) -> "-i, --input <STRING>"
+    tabs::String = v.type != Bool ? "\t" : "\t\t"
+    args_options::String = string("\n  ", join(hyphenate.(args_vec), ", "), type, tabs, v.description)
+    v.positional && (args_options *= "\t (positional arg)")
+    options = args_options
+    return (; u=args_usage, o=options)
 end
 
 """
@@ -93,19 +131,15 @@ Examples:
 function generate_usage!(parser::ArgumentParser)
     usage::String = "Usage: $(parser.filename)"
     options::String = "Options:"
-    for v::ArgumentValues in values(parser.kv_store)
-        args_vec::Vector{String} = args2vec(v.args)
-        # example: String -> "<STRING>"
-        type::String = v.type != Bool ? string(" ", join("<>", uppercase(string(v.type)))) : ""
-        # example: (i,input) -> "[-i|--input <STRING>]"
-        args_usage::String = string(join(hyphenate.(args_vec), "|"), type)
-        !v.required && (args_usage = join("[]", args_usage))
-        usage *= string(" ", args_usage)
-        # example: (i,input) -> "-i, --input <STRING>"
-        tabs::String = v.type != Bool ? "\t" : "\t\t"
-        args_options::String = string("\n  ", join(hyphenate.(args_vec), ", "), type, tabs, v.description)
-        options *= args_options
+
+    (;all_args) = sort_args(parser)
+
+    for v::ArgumentValues in all_args
+        (; u, o) = argument_usage(v)
+        usage *= " " * u
+        options *= o
     end
+
     examples::String = string("Examples:", join(string.("\n  \$ ", parser.examples)))
     generated::String = """
 
@@ -117,7 +151,8 @@ function generate_usage!(parser::ArgumentParser)
 
     $(examples)
     """
-    return generated
+    parser.usage = generated
+    return parser.usage
 end
 
 """
@@ -169,8 +204,8 @@ Function `parse_args!` is exported.
 function parse_args!(parser::ArgumentParser; cli_args=nothing)
     isnothing(cli_args) && (cli_args=ARGS)
     if parser.add_help && !haskey(parser, "help")
-        parser = add_argument!(parser, "-h", "--help", type=Bool, default=false, description="Print the help message.")
-        parser.usage = generate_usage!(parser)
+        add_argument!(parser, "-h", "--help", type=Bool, default=false, description="Print the help message.")
+        generate_usage!(parser)
     end
     parser.filename = PROGRAM_FILE
     n::Int64 = length(cli_args)
@@ -190,7 +225,7 @@ function parse_args!(parser::ArgumentParser; cli_args=nothing)
             nextarg += 1
         else
             posargs_exhausted = true
-            (isnothing(pa.value) | pa.required) && return _error(throw_on_exception(parser), "Value for positional argument $(canonicalname(pa)) not supplied")
+            isnothing(pa.value) && return _error(throw_on_exception(parser), "Value for positional argument $(canonicalname(pa)) not supplied")
         end
     end
 
@@ -279,7 +314,7 @@ function set_value!(parser::ArgumentParser, numkey::Integer, value::Any)
     value = convert(vals.type, value)
     (ok, value) = validate(value, vld)
     ok || return _error(thr_on_exc, "$value is not a valid value for arg $(canonicalname(vals.args))") 
-    parser.kv_store[numkey] = ArgumentValues(vals.args, value, vals.type, vals.required, vals.positional, vals.description, vals.validator)
+    parser.kv_store[numkey] = ArgumentValues(vals.args, value, vals.type, vals.positional, vals.description, vals.validator)
     return parser
 end
 
