@@ -349,19 +349,8 @@ function parse_arg(t::Type, val_str::AbstractString, ::Any)
     return (; ok=true, v, msg=nothing)
 end
 
-function parse_arg(t::Type, val, ::Any) 
-    v = try
-        convert(t, val)
-    catch e
-        return (; ok=false, v=nothing, msg="cannot convert $val into $t")
-    end
-    return (; ok=true, v, msg=nothing)
-end
-
+# keyword Bool args do not have the "argument body" and converted explicitely. 
+# therefore this is a special case.
+# other arguments passed as Strings
+parse_arg(::Type{Bool}, v::Bool, ::Any) = (; ok=true, v, msg=nothing)
 parse_arg(::Type{String},   v::AbstractString, ::Any)  = (; ok=true, v, msg=nothing)
-
-
-# parse_arg(::Type{Number}, v::Number, ::Any) = (; ok=true, v, msg=nothing)
-# parse_arg(t, v, ::Any) where {N1 <: Number} = # where {N2 <: Number} = 
-#     (; ok=true, v=convert(t, v), msg=nothing)
-# parse_arg(::Type{Int}, v::Int, ::Any) = (; ok=true, v, msg=nothing)
