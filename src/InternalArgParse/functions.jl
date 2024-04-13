@@ -49,7 +49,6 @@ function add_argument!(parser::ArgumentParser, arg_short::String="", arg_long::S
     # map both argument names to the same numkey
     !isempty(arg_short) && (parser.arg_store[arg2strkey(arg_short)] = numkey)
     !isempty(arg_long)  && (parser.arg_store[arg2strkey(arg_long)]  = numkey)
-    default = (type == Any) | isnothing(default) ? default : convert(type, default)
     (ok, default) = validate(default, validator)
     ok || throw(ArgumentError("invalid default value $default for arg $(canonicalname(args))")) 
     vals::ArgumentValues = ArgumentValues(args, default, type, positional, description, validator)
@@ -167,21 +166,17 @@ function help(parser::ArgumentParser; color=nothing)
 end
 
 """
-    update_val!(parser::ArgumentParser, numkey::Integer, value) → parser
+    update_val!(parser::ArgumentParser, numkey::Integer, val_str::AbstractString) → parser
 
-Function `update_val!` is internal
+See also `set_value!`. Function `update_val!` is internal.
 """
-function update_val!(parser, numkey, value)
-    # extract default value and update given an argument value
-    vals::ArgumentValues = parser.kv_store[numkey]
-    # type cast value into tuple index 1
-    value = try
-        value = vals.type == Any ? value : _parse(vals.type, value)
-    catch e
-        e isa ArgumentError && return _error(throw_on_exception(parser), "cannot parse $value into $(vals.type)")
-    end
+function update_val!(parser, numkey, val_str)
+    av::ArgumentValues = parser.kv_store[numkey]
 
-    return set_value!(parser, numkey, value)
+    (;ok, v, msg) = parse_arg(av.type, val_str, av.validator)
+    ok || return _error(throw_on_exception(parser), msg)
+
+    return set_value!(parser, numkey, v)
 end
 
 """
@@ -254,7 +249,6 @@ function parse_args!(parser::ArgumentParser; cli_args=nothing)
     end
     return parser
 end
-
 
 """
     get_value(parser, arg) → value::Any
@@ -337,9 +331,37 @@ Function `_error` is internal.
 _error(thr_on_exc, msg; excp=ArgumentError) = thr_on_exc ? throw(excp(msg)) : excp(msg) 
 
 # Type conversion helper methods.
-_parse(x, y) = parse(x, y)
-_parse(::Type{String},   x::Number)  = x
-_parse(::Type{String},   x::String)  = x
-_parse(::Type{Bool},     x::Bool)    = x
-_parse(::Type{Number},   x::Number)  = x
-_parse(::Type{String},   x::Bool)    = x ? "true" : "false"
+# parse_arg(av.type, val_str, av.validator)
+
+"""
+    parse_arg(t::Type, val_str::AbstractString, ::Union{Nothing, AbstractValidator}) → (; ok, v=parsed_value, msg=nothing)
+
+Tries to parse `val_str` to type `t`. For your custom types or custom parsing, provide your own methods.
+
+Function `parse_arg` is public, but not exported.
+"""
+function parse_arg(t::Type, val_str::AbstractString, ::Any) 
+    v = try
+        parse(t, val_str)
+    catch e
+        return (; ok=false, v=nothing, msg="cannot parse $val_str into $t")
+    end
+    return (; ok=true, v, msg=nothing)
+end
+
+function parse_arg(t::Type, val, ::Any) 
+    v = try
+        convert(t, val)
+    catch e
+        return (; ok=false, v=nothing, msg="cannot convert $val into $t")
+    end
+    return (; ok=true, v, msg=nothing)
+end
+
+parse_arg(::Type{String},   v::AbstractString, ::Any)  = (; ok=true, v, msg=nothing)
+
+
+# parse_arg(::Type{Number}, v::Number, ::Any) = (; ok=true, v, msg=nothing)
+# parse_arg(t, v, ::Any) where {N1 <: Number} = # where {N2 <: Number} = 
+#     (; ok=true, v=convert(t, v), msg=nothing)
+# parse_arg(::Type{Int}, v::Int, ::Any) = (; ok=true, v, msg=nothing)
