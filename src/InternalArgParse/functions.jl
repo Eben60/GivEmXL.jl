@@ -330,9 +330,6 @@ Function `_error` is internal.
 """
 _error(thr_on_exc, msg; excp=ArgumentError) = thr_on_exc ? throw(excp(msg)) : excp(msg) 
 
-# Type conversion helper methods.
-# parse_arg(av.type, val_str, av.validator)
-
 """
     parse_arg(t::Type, val_str::AbstractString, ::Union{Nothing, AbstractValidator}) → (; ok, v=parsed_value, msg=nothing)
 

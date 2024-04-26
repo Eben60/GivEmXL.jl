@@ -17,7 +17,12 @@ end
 function s2unit(s)
     ismissing(s) && return s
     s1 = "u$s"
-    x = eval(Meta.parse(s1))
+    x = try
+            eval(Meta.parse(s1))
+        catch e
+            println("cannot parse $s1")
+            rethrow(e)
+        end
     return x
 end
 
