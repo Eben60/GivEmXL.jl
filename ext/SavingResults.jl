@@ -73,7 +73,12 @@ function write_errors(errf, errors)
     return errored
 end
 
-getplots(itr) = [k => v for (k, v) in pairs(itr) if v isa Plots.Plot]
+getplots(itr) = [k => v for (k, v) in pairs(itr) if isplot(v)]
+
+isplot(::Any) = false
+isplot(::P ) where P <: Plots.Plot = true
+
+_saveplot(pl::P, fl) where P <: Plots.Plot = savefig(pl, fl)
 
 function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
     # rs = Dict(pairs(rs))
@@ -88,7 +93,7 @@ function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
         singleplot || (prefix *= "_$(k)_")
         fname = "$(prefix)_$plot_annotation.$plotformat"
         fl = joinpath(rslt_dir, fname)
-        savefig(pl, fl)
+        _saveplot(pl, fl)
     end
     return nothing
 end
