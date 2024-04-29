@@ -1,8 +1,12 @@
 module SavingResults
 
+using GivEmExel
+import GivEmExel: prepare_xl, out_paths, write_errors, saveplots
+
+
 using Unitful, DataFrames, XLSX, Plots
 
-export prepare_xl, out_paths, write_errors, saveplots
+# export prepare_xl, out_paths, write_errors, saveplots
 
 function anyfy_col!(df, cname) 
     df[!, cname] = Vector{Any}(df[!, cname])
