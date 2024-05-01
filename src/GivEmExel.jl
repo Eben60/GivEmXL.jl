@@ -10,7 +10,7 @@ using .InternalArgParse
 
 export InternalArgParse
 export full_interact, merge_params
-export SavingResults
+# export SavingResults
 # export prepare_xl, out_paths, write_errors, saveplots
 
 function prepare_xl() end

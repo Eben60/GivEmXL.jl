@@ -1,9 +1,9 @@
-module SavingResultsMakieExt
+module SavingResultsPlotsExt
 
 using Plots
 
-using GivEmExel.SavingResults
-import GivEmExel.SavingResults: isplot, save_plot
+using GivEmExel
+import GivEmExel: isplot, save_plot
 
 isplot(::P ) where P <: Plots.Plot = true
 
