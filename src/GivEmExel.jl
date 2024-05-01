@@ -10,8 +10,8 @@ using .InternalArgParse
 
 export InternalArgParse
 export full_interact, merge_params
-# export SavingResults
-export prepare_xl, out_paths, write_errors, saveplots
+export SavingResults
+# export prepare_xl, out_paths, write_errors, saveplots
 
 function prepare_xl() end
 function out_paths() end
@@ -23,6 +23,6 @@ export read_xl_paramtables, exper_paramsets
 include("process_data.jl")
 include("get_files.jl")
 include("interact.jl")
-# include("saving_results.jl")
+include("SavingResults.jl")
 
 end
