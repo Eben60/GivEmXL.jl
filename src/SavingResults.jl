@@ -4,7 +4,7 @@ using GivEmExel
 import GivEmExel: prepare_xl, out_paths, write_errors, saveplots
 
 
-using Unitful, DataFrames, XLSX, Plots
+using Unitful, DataFrames, XLSX # , Plots
 
 export prepare_xl, out_paths, write_errors, saveplots
 
@@ -76,9 +76,7 @@ end
 getplots(itr) = [k => v for (k, v) in pairs(itr) if isplot(v)]
 
 isplot(::Any) = false
-isplot(::P ) where P <: Plots.Plot = true
-
-_saveplot(pl::P, fl) where P <: Plots.Plot = savefig(pl, fl)
+save_plot(p::Any, fl) = Error("Saving plots not implemented for $(typeof(p)). You may want to implement your own method for GivEmExel.SavingResults: save_plot")
 
 function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
     # rs = Dict(pairs(rs))
@@ -93,7 +91,7 @@ function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
         singleplot || (prefix *= "_$(k)_")
         fname = "$(prefix)_$plot_annotation.$plotformat"
         fl = joinpath(rslt_dir, fname)
-        _saveplot(pl, fl)
+        save_plot(pl, fl)
     end
     return nothing
 end
