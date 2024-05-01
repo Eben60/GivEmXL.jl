@@ -1,12 +1,13 @@
 module SavingResultsMakieExt
 
-using GivEmExel
-
 using Makie
+using GivEmExel
+import GivEmExel: isplot, save_plot
 
-isplot(::P ) where P <: Union{Makie.Figure, Makie.AbstractScene, Makie.AbstractPlot} = true
+MakiePlot = Union{Makie.Figure, Makie.AbstractScene, Makie.AbstractPlot}
 
-_saveplot(pl::P, fl) where P <: Union{Makie.Figure, Makie.AbstractScene, Makie.AbstractPlot} = Makie.save(fl, pl)
+isplot(::P ) where P <: MakiePlot = true
+save_plot(pl::P, fl) where P <: MakiePlot = Makie.save(fl, pl)
 
 """
 FileIO.save(filename, scene; size = size(scene), pt_per_unit = 0.75, px_per_unit = 1.0)

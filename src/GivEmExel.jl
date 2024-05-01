@@ -18,10 +18,10 @@ export full_interact, merge_params
 # export SavingResults
 # export prepare_xl, out_paths, write_errors, saveplots
 
-function prepare_xl() end
-function out_paths() end
-function write_errors() end
-function saveplots() end
+# function prepare_xl() end
+# function out_paths() end
+# function write_errors() end
+# function saveplots() end
 
 export read_xl_paramtables, exper_paramsets
 
