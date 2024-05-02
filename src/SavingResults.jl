@@ -94,6 +94,7 @@ function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
         prefix = subset==no ? "fig$no" : "fig$subset-$no"
         singleplot || (prefix *= "_$(k)_")
         fname = "$(prefix)_$plot_annotation.$plotformat"
+        fname = replace(fname, " " => "_")
         fl = joinpath(rslt_dir, fname)
         save_plot(pl, fl)
     end
