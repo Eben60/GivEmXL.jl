@@ -58,15 +58,21 @@ function write_errors(errf, errors)
             for e in errors
                 e = NamedTuple(e)
                 (;row, exceptn) = e
-                
-                if haskey(e, :comment) 
-                    comment = e.comment
-                else
-                    comment = "no further info"
-                end
+
+                comment = get(e, :comment, "no further info")
+                back_trace = get(e, :back_trace, nothing)
+
 
                 println(io, "row = $row: $comment")
-                println(io, "Errored: $exceptn \n")
+                println(io, "Errored: $exceptn")
+                println(io, "-------- backtrace --------")
+                if back_trace isa Vector
+                    for sf in back_trace
+                        println(io, sf)
+                    end
+                end
+                println(io, "_"^80, "\n")
+                back_trace
             end
         end
     end
