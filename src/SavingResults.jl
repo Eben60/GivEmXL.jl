@@ -81,7 +81,8 @@ end
 getplots(itr) = [k => v for (k, v) in pairs(itr) if isplot(v)]
 
 function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
-    lowercase(string(plotformat)) == "none" && return nothing
+    plotformat = lowercase(string(plotformat))
+    plotformat == "none" && return nothing
     
     subset = get(rs, :subset, 0)
     no = get(rs, :no, subset)
@@ -100,15 +101,15 @@ function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
     return nothing
 end
 
-function proc_data(xlfile, datafile, paramsets, procwhole_fn, procsubset_fn; throwonerr=false)
+function proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn; throwonerr=false)
     subsets_results = []
     errors = []
     overview = (;)
     try
-        overview = procwhole_fn(xlfile, datafile, paramsets)
+        overview = procwhole_fn(xlfile, datafiles, paramsets)
         for (i, pm_subset) in pairs(paramsets)
             try
-                push!(subsets_results, procsubset_fn(i, pm_subset, overview, xlfile, datafile, paramsets))
+                push!(subsets_results, procsubset_fn(i, pm_subset, overview, xlfile, datafiles, paramsets))
             catch exceptn
                 back_trace = stacktrace(catch_backtrace())
                 comment = get(pm_subset, :comment, "")
@@ -177,14 +178,16 @@ function save_results(results, xlfile, paramsets)
     return (;dfs)
 end
 
-function proc_n_save(xlfile, datafile, procwhole_fn, procsubset_fn;
-        ntargs = (;),
+function proc_n_save(procwhole_fn, procsubset_fn;
+        xlfile,
+        datafiles=nothing, 
+        paramsets = (;),
         paramtables=(;setup="params_setup", exper="params_experiment"),
         )
-    throwonerr = get(ntargs, :throwonerr, false)
-    (;df_setup, df_exp) = read_xl_paramtables(xlfile; paramtables)
-    paramsets = exper_paramsets(ntargs, df_exp, df_setup);
-    results = proc_data(xlfile, datafile, paramsets, procwhole_fn, procsubset_fn; throwonerr)
+    throwonerr = get(paramsets[1], :throwonerr, false)
+    # (;df_setup, df_exp) = read_xl_paramtables(xlfile; paramtables)
+    # paramsets = exper_paramsets(paramsets, df_exp, df_setup);
+    results = proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn; throwonerr)
     (; overview, subsets_results, errors) = results
     (;dfs) = save_results(results, xlfile, paramsets)
     return (; overview, subsets_results, errors, dfs) 
