@@ -81,7 +81,8 @@ end
 getplots(itr) = [k => v for (k, v) in pairs(itr) if isplot(v)]
 
 function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
-    # rs = Dict(pairs(rs))
+    lowercase(string(plotformat)) == "none" && return nothing
+    
     subset = get(rs, :subset, 0)
     no = get(rs, :no, subset)
     plot_annotation = get(rs, :plot_annotation, "")
