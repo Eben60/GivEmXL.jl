@@ -181,8 +181,8 @@ end
 function proc_n_save(procwhole_fn, procsubset_fn;
         xlfile,
         datafiles=nothing, 
-        paramsets = (;),
-        paramtables=(;setup="params_setup", exper="params_experiment"),
+        paramsets = [(;)],
+        # paramtables=(;setup="params_setup", exper="params_experiment"),
         )
     throwonerr = get(paramsets[1], :throwonerr, false)
     # (;df_setup, df_exp) = read_xl_paramtables(xlfile; paramtables)

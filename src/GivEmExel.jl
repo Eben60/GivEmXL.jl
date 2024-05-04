@@ -1,6 +1,8 @@
 module GivEmExel
+using JuliaInterpreter
 using Unitful, DataFrames, XLSX, Preferences # , Plots
 using NativeFileDialog: pick_file, pick_multi_file, pick_folder
+using PrecompileTools
 
 
 isplot(::Any) = false
@@ -29,5 +31,10 @@ include("process_data.jl")
 include("get_files.jl")
 include("interact.jl")
 include("SavingResults.jl")
+
+
+@compile_workload begin
+    s2unit("100m/s^2")
+end
 
 end

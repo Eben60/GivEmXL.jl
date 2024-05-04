@@ -5,8 +5,10 @@ version = "0.1.0"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+JuliaInterpreter = "aa1ae85d-cabe-5617-a682-6adf51b2e16a"
 NativeFileDialog = "e1fe445b-aa65-4df4-81c1-2041507f0fd4"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
+PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
 Preferences = "21216c6a-2e73-6563-6e65-726566657250"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"

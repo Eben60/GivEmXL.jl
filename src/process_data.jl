@@ -1,3 +1,24 @@
+using Unitful: lookup_units
+function s2unit(str; unit_context=Unitful)
+    # Unitful.uparse() breaks precompilation
+    # https://github.com/PainterQubits/Unitful.jl/issues/649
+    # https://github.com/PainterQubits/Unitful.jl/pull/655 
+    ismissing(str) && return str
+
+    ex = nothing
+    try
+        str = strip(str, '"')
+        ex = Meta.parse(str)
+        isa(ex, Symbol) && return lookup_units(unit_context, ex)
+        isa(ex, Number) && return lookup_units(unit_context, ex)
+        ex_processed = lookup_units(unit_context, ex)
+        return JuliaInterpreter.finish_and_return!(JuliaInterpreter.Frame(Unitful, ex_processed))
+    catch e
+        println("___ $ex isa $(typeof(ex)) ___")
+        println("error trying to convert $str")
+        rethrow(e)
+    end
+end
 
 function remove_comments(df)
     col1 = df[!, 1]
@@ -14,17 +35,20 @@ function read_xl_paramtables(f_src; paramtables=(;setup="params_setup", exper="p
     return (;df_setup, df_exp)
 end
 
-function s2unit(s)
-    ismissing(s) && return s
-    s1 = "u$s"
-    x = try
-            eval(Meta.parse(s1))
-        catch e
-            println("cannot parse $s1")
-            rethrow(e)
-        end
-    return x
-end
+# function s2unit(s)
+#     ismissing(s) && return s
+#     x = try
+#         # uparse() breaks precompilation
+#         # https://github.com/PainterQubits/Unitful.jl/issues/649
+#         # https://github.com/PainterQubits/Unitful.jl/pull/655 
+#         # JuliaInterpreter.finish_and_return!(Frame(Unitful, Meta.parse(s)))
+#         _uparse(s)
+#         catch e
+#             println("cannot parse $s")
+#             rethrow(e)
+#         end
+#     return x
+# end
 
 read_units(df_setup) = NamedTuple((k, s2unit(v)) for (k, v) in pairs(df_setup[2, :]))
 read_units(d::Nothing) = (;)

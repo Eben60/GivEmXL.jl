@@ -89,7 +89,7 @@ function full_interact(pp0, pps, proc_data_fn;
     allargpairs = []
 
     (;abort, argpairs) = proc_ARGS(pp0)
-    @show (;abort, argpairs)
+    # @show (;abort, argpairs)
     abort && return nothing
     push!(allargpairs, argpairs)
 
@@ -97,7 +97,7 @@ function full_interact(pp0, pps, proc_data_fn;
     abort && return nothing 
     push!(allargpairs, argpairs)
 
-    @show allargpairs
+    # @show allargpairs
     commonargs = mergent(allargpairs)
 
     while true
