@@ -6,15 +6,15 @@ function s2unit(str; unit_context=Unitful)
     ismissing(str) && return str
 
     ex = nothing
+    qmarks = ['"', '\'', '«', '»', '‘', '’', '“', '”', '„', '‟', ]
     try
-        str = strip(str, '"')
+        str = strip(str, qmarks)
         ex = Meta.parse(str)
         isa(ex, Symbol) && return lookup_units(unit_context, ex)
         isa(ex, Number) && return lookup_units(unit_context, ex)
         ex_processed = lookup_units(unit_context, ex)
         return JuliaInterpreter.finish_and_return!(JuliaInterpreter.Frame(Unitful, ex_processed))
     catch e
-        println("___ $ex isa $(typeof(ex)) ___")
         println("error trying to convert $str")
         rethrow(e)
     end
