@@ -83,7 +83,6 @@ getplots(itr) = [k => v for (k, v) in pairs(itr) if isplot(v)]
 function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
     plotformat = lowercase(string(plotformat))
     plotformat == "none" && return nothing
-    
     subset = get(rs, :subset, 0)
     no = get(rs, :no, subset)
     plot_annotation = get(rs, :plot_annotation, "")
@@ -106,17 +105,19 @@ function proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn; th
     errors = []
     overview = (;)
     try
-        overview = procwhole_fn(xlfile, datafiles, paramsets)
-        for (i, pm_subset) in pairs(paramsets)
-            try
-                push!(subsets_results, procsubset_fn(i, pm_subset, overview, xlfile, datafiles, paramsets))
-            catch exceptn
-                back_trace = stacktrace(catch_backtrace())
-                comment = get(pm_subset, :comment, "")
-                push!(errors, (;row=i, comment, exceptn, back_trace))
-                throwonerr && rethrow(exceptn)
-            end    
-        end     
+        isnothing(procwhole_fn) || (overview = procwhole_fn(xlfile, datafiles, paramsets))
+        if !isnothing(procsubset_fn)
+            for (i, pm_subset) in pairs(paramsets)
+                try
+                    push!(subsets_results, procsubset_fn(i, pm_subset, overview, xlfile, datafiles, paramsets))
+                catch exceptn
+                    back_trace = stacktrace(catch_backtrace())
+                    comment = get(pm_subset, :comment, "")
+                    push!(errors, (;row=i, comment, exceptn, back_trace))
+                    throwonerr && rethrow(exceptn)
+                end    
+            end
+        end
     catch exceptn
         back_trace = stacktrace(catch_backtrace())
         push!(errors,(;row=-1, comment="error opening of processing data file", exceptn, back_trace))
