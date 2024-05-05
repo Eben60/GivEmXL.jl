@@ -74,7 +74,7 @@ function exper_paramsets(specargs, df_exp, df_setup)
     return p_sets
 end
 
-function full_interact(pp0, pps, proc_data_fn;
+function complete_interact(pp0, pps, proc_data_fn;
         basedir=nothing, 
         paramtables = (;setup="params_setup", exper="params_experiment"),
         getexel=false,

@@ -16,7 +16,7 @@ using .InternalArgParse
 
 
 export InternalArgParse
-export full_interact, merge_params
+export complete_interact, merge_params
 # export SavingResults
 # export prepare_xl, out_paths, write_errors, saveplots
 
