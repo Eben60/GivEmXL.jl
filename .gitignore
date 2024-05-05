@@ -30,3 +30,4 @@ src/tmp*
 tmp*
 test*
 src/olds/*
+**/*_rslt/*
