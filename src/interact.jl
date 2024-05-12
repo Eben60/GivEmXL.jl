@@ -1,5 +1,12 @@
+"""
+    parse_cl_string(s::AbstractString) →  ::String[]
+
+Wrapper around Base.shell_split
+
+Function `parse_cl_string` is exported.
+"""
 function parse_cl_string(s) 
-    return string.(shell_split(s))
+    return string.(Base.shell_split(s))
 end
 
 emptyargs() = Pair{Symbol, Any}[]
