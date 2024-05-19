@@ -3,24 +3,13 @@ module InternalArgParse
 using OrderedCollections: OrderedDict
 using Base: shell_split
 
-
-# throw_on_exception::Bool=false
-# color::String = "default"
-# introduction::String = ""
-# prompt::String = "> "
-
-kwargssubset(allargs, keyssubset) = NamedTuple(k => allargs[k] for k in keyssubset)
+kwargssubset(allargs, keyssubset) = NamedTuple(k => allargs[k] for k in keyssubset if haskey(allargs, k))
+kwargssubset(allargs, t::Type) = kwargssubset(allargs, fieldnames(t))
 
 function initparser(;kwargs...)
-    interactive = [:throw_on_exception, :color, :introduction, :prompt]
-    kwkeys = keys(kwargs)
-    iakeys = interactive ∩ kwkeys
-    apkeys = setdiff(kwkeys, iakeys)
-
-    iargs = kwargssubset(kwargs, iakeys)
-    apargs = kwargssubset(kwargs, apkeys)
-
+    iargs = kwargssubset(kwargs, InteractiveUsage)
     interactive = InteractiveUsage(; iargs...)
+    apargs = kwargssubset(kwargs, ArgumentParser)
     return ArgumentParser(; interactive, apargs...)
 end
 
