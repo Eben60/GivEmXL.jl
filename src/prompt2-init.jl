@@ -51,9 +51,9 @@ spec_options = let
     pp = initparser(; 
         description="Prompt for specific options", 
             add_help=true, 
-                color = "cyan", 
-                introduction="please enter specific options",
-                prompt="GivEmExel> ",
+            color = "cyan", 
+            introduction="please enter specific options",
+            prompt="GivEmExel> ",
             )
 
     add_argument!(pp, "-b", "--binary", 
@@ -72,9 +72,9 @@ next_file = let
     pp = initparser(; 
         description="Prompt for next file", 
         add_help=true, 
-            color = "cyan", 
-            introduction="press <ENTER> to process next file, or -a<ENTER> to abort ",
-            prompt="GivEmExel> ",
+        color = "cyan", 
+        introduction="press <ENTER> to process next file, or -a<ENTER> to abort ",
+        prompt="GivEmExel> ",
         )
     
     add_example!(pp, "$(pp.interactive.prompt) --abort")
@@ -87,11 +87,9 @@ exelfile_prompt = let
     pp = initparser(; 
         description="Prompt for Excel file", 
         add_help=true, 
-        interactive=InteractiveUsage(;
-            color = "cyan", 
-            introduction="press <ENTER>, then select Excel file.",
-            prompt="GivEmExel> ",
-            ), 
+        color = "cyan", 
+        introduction="press <ENTER>, then select Excel file.",
+        prompt="GivEmExel> ",
         )
     pp
 end

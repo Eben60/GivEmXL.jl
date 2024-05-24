@@ -1,12 +1,8 @@
-
-
 pp0 = let
-    pp = ArgumentParser(; 
+    pp = initparser(; 
         description="Command line options parser", 
         add_help=true, 
-        interactive=InteractiveUsage(;
-            color = promptcolor, 
-            ),
+        color = promptcolor, 
         )
 
     add_argument!(pp, "-p", "--plotformat"; 
@@ -33,14 +29,12 @@ gen_options = nothing
 spec_options = nothing
 
 next_file = let
-    pp = ArgumentParser(; 
+    pp = initparser(; 
         description="Prompt for next file", 
         add_help=true, 
-        interactive=InteractiveUsage(;
-            color = promptcolor, 
-            introduction="press <ENTER> to process next file, of -a<ENTER> to abort ",
-            prompt=prompt,
-            ), 
+        color = promptcolor, 
+        introduction="press <ENTER> to process next file, of -a<ENTER> to abort ",
+        prompt=prompt,
         )
     
     add_example!(pp, "$(pp.interactive.prompt) --abort")
@@ -50,14 +44,12 @@ next_file = let
 end
 
 exelfile_prompt = let
-    pp = ArgumentParser(; 
+    pp = initparser(; 
         description="Prompt for Excel file", 
         add_help=true, 
-        interactive=InteractiveUsage(;
-            color = promptcolor, 
-            introduction="press <ENTER>, then select Excel file.",
-            prompt=prompt,
-            ), 
+        color = promptcolor, 
+        introduction="press <ENTER>, then select Excel file.",
+        prompt=prompt,
         )
     pp
 end
