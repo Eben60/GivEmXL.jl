@@ -1,15 +1,14 @@
 """
     AbstractValidator
 
-The supertype for validators.
+The supertype for validators. Type `AbstractValidator` is public, but not exported.
 """
 abstract type AbstractValidator end
 
-# reg_ex= [r"^fo[aoe]$"]))
 """
     StrValidator <: AbstractValidator
 
-String validator. 
+String validator type. Type `StrValidator` is exported.
 
 # Fields
 - `upper_case::Bool = false`: If `true`, input and pattern converted to `uppercase`, 
@@ -17,6 +16,7 @@ String validator.
 - `starts_with::Bool = false`: If `true`, validate if one of the words in the `patterns`
     starts with input. Returns the whole matching word.
 - `patterns::Vector{Union{AbstractString, Regex}}`
+
 # Examples
 ```julia-repl
 julia> validate("foo", StrValidator(; upper_case=true, patterns=["foo", "bar"]))
@@ -54,24 +54,52 @@ function validate(v::AbstractString, vl::StrValidator)
     end
     return (; ok=false, v=nothing)
 end
+"""
+    RealValidator{T} <: AbstractValidator
 
-@kwdef struct RealValidator <: AbstractValidator
-    excl_vals::Vector{Real} = []
-    excl_ivls::Vector{Tuple{Real, Real}} = []
-    incl_vals::Vector{Real} = []
-    incl_ivls::Vector{Tuple{Real, Real}} = []
-    RealValidator(excl_vals, excl_ivls, incl_vals, incl_ivls) = all(isempty.([excl_vals, excl_ivls, incl_vals, incl_ivls])) ? 
+Numbers validator type. If no include criteria specified, anything not excluded considered OK. 
+The intervals are evaluated as closed `a ≤ x ≤ b`.
+Type `RealValidator` is exported.
+
+# Fields
+- `excl_vals::Vector{T} = T[]`: list of values to exclude
+- `excl_ivls::Vector{Tuple{T, T}} = Tuple{T, T}[]`: list of intervals to exclude
+- `incl_vals::Vector{T} = T[]`: list of accepted values
+- `incl_ivls::Vector{Tuple{T, T}} = Tuple{T, T}[]`: list of accepted intervals
+
+# Examples
+```julia-repl
+julia> validate(1, RealValidator{Int}(;excl_vals=[1, 2], excl_ivls=[(10, 15), (20, 25)], incl_vals=[3, 4, 11], incl_ivls=[(100, 1000)]))
+(ok = false, v = nothing)
+
+julia> validate(150, RealValidator{Int}(;incl_ivls=[(100, 200)]))
+(ok = true, v = 150)
+
+julia> validate(50, RealValidator{Int}(;excl_ivls=[(100, 200)]))
+(ok = true, v = 50)
+```
+"""
+@kwdef struct RealValidator{T} <: AbstractValidator
+    excl_vals::Vector{T} = T[]
+    excl_ivls::Vector{Tuple{T, T}} = Tuple{T, T}[]
+    incl_vals::Vector{T} = T[]
+    incl_ivls::Vector{Tuple{T, T}} = Tuple{T, T}[]
+    RealValidator{T}(excl_vals, excl_ivls, incl_vals, incl_ivls) where {T} = all(isempty.([excl_vals, excl_ivls, incl_vals, incl_ivls])) ? 
         error("RealValidator init error: At least one criterium must be non-empty") :
-        new(excl_vals, excl_ivls, incl_vals, incl_ivls) 
+        new{T}(excl_vals, excl_ivls, incl_vals, incl_ivls) 
 end
 
 """
+    validate(v::Any, ::Nothing) → (;ok=true, v)
+    validate(v::Missing, ::Any) → (;ok=true, v)
     validate(v::Any, vl::AbstractValidator) → (;ok::Bool, v)
 
 Validate input v against validator vl, and returns named tuple with validation result `ok` 
-and (possibly canonicalized) input value `v` on success, or `nothing` on validation failure.
+and (possibly canonicalized) input value `v` on success, or `nothing` on validation failure. 
+If `nothing` is supplied instead of Validator, validation skipped. The same, if the value `v`
+to be validated is `nothing`.
 For examples and specific information see documentation for the corresponding Validator,
-e.g. `StrValidator` or `RealValidator`.
+e.g. `StrValidator` or `RealValidator`. Function `validate` is exported.
 """
 function validate(v::Real, vl::RealValidator)
     in_interval(v, x) = x[1] <= v <= x[2]
@@ -91,14 +119,8 @@ function validate(v::Real, vl::RealValidator)
 end
 
 validate(v, vl) = error("no method defined for validate($(typeof(v)), $(typeof(vl)))") 
-
-"""
-    validate(v::Any, ::Nothing) → (;ok=true, v)
-    validate(v::Nothing, ::Any) → (;ok=true, v)
-
-If `nothing` is supplied instead of Validator, validation skipped. The same, if the value `v`
-to be validated is `nothing`.
-"""
 validate(v, ::Nothing) = (; ok=true, v)
 validate(v::Nothing, ::Nothing) = (; ok=true, v)
 validate(v::Nothing, ::Any) = (; ok=true, v) # nothing is generally a valid value
+validate(v::Missing, ::Any) = (; ok=true, v) # missing is generally a valid value
+validate(v::Missing, ::Nothing) = (; ok=true, v)

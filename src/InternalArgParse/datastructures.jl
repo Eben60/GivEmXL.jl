@@ -2,7 +2,7 @@
 """
     ArgForms
 
-Command-line arguments, short and long forms.
+Command-line arguments, short and long forms. Type `ArgForms` is exported.
 
 # Fields
 - `short::String`
@@ -16,7 +16,7 @@ end
 """
     ArgumentValues
 
-Command-line argument values.
+Command-line argument values. Type `ArgumentValues` is exported.
 
 # Fields
 - `const args::ArgForms`
@@ -28,7 +28,7 @@ Command-line argument values.
 """
 @kwdef mutable struct ArgumentValues
     const args::ArgForms
-    value::Any
+    value::Any = missing
     const type::Type = Any
     const positional::Bool = false
     const description::String = ""
@@ -37,6 +37,8 @@ end
 
 """
     InteractiveUsage
+
+Type `InteractiveUsage` is exported.
 
 # Fields  
 - `throw_on_exception = false`: immediately throw on exception if `true`, 
@@ -47,7 +49,6 @@ end
 """
 @kwdef struct InteractiveUsage
     throw_on_exception::Bool=false
-    color::String = "default"
     introduction::String = ""
     prompt::String = "> "
 end
@@ -55,7 +56,7 @@ end
 """
     ArgumentParser
 
-Command-line argument parser with numkey-value stores and attributes.
+Command-line argument parser with numkey-value stores and attributes. Type `ArgumentParser` is exported.
 
 # Fields
 ## stores
@@ -87,5 +88,13 @@ Command-line argument parser with numkey-value stores and attributes.
     usage::String = ""
     examples::Vector{String} = String[]
     add_help::Bool = false
+    color::String = "default"
     interactive::Union{Nothing, InteractiveUsage} = nothing
 end
+
+function argparser(;throw_on_exception=nothing, introduction=nothing, prompt=nothing, kwargs...) 
+    isnothing(throw_on_exception) && isnothing(introduction) && isnothing(prompt) && return ArgumentParser(;kwargs...)
+    return ArgumentParser(;interactive=InteractiveUsage(;throw_on_exception, introduction, prompt), kwargs...)
+end
+
+export argparser

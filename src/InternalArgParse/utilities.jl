@@ -1,4 +1,4 @@
-"Key-value store mapping from colors to ANSI codes."
+"Key-value store mapping from colors to ANSI codes. An internal constant."
 ANSICODES::Base.ImmutableDict{String,Int} = Base.ImmutableDict(
     "black"   => 30,
     "red"     => 31,
@@ -55,8 +55,8 @@ Function `getcolor` is public, not exported.
 """
 function getcolor(parser::ArgumentParser, color=nothing) 
     !isnothing(color) && return color   
-    return (isnothing(parser.interactive) || isnothing(parser.interactive.color)) ? 
-        "default" : parser.interactive.color
+    return isnothing(parser.color) ? 
+        "default" : parser.color
 end
 
 """
@@ -84,7 +84,7 @@ canonicalname(argf::ArgForms) = lstrip((isempty(argf.long) ? argf.short : argf.l
 canonicalname(argvs::ArgumentValues) = canonicalname(argvs.args)
 
 """
-    args_pairs(parser::ArgumentParser; excl=["help"]) → ::Vector{Pair{Symbol, Any}}
+    args_pairs(parser::ArgumentParser; excl::Union{Nothing, Vector{String}}=nothing) → ::Vector{Pair{Symbol, Any}}
 
 Return vector of pairs `argname => argvalue` for all arguments except listed in `excl`.
     If argument has both short and long forms, the long one is used. Returned value can 
@@ -93,7 +93,8 @@ Return vector of pairs `argname => argvalue` for all arguments except listed in 
 
 Function `args_pairs` is exported.
 """
-function args_pairs(parser::ArgumentParser; excl=["help"])
+function args_pairs(parser::ArgumentParser; excl=nothing)
+    isnothing(excl) && (excl=[])
     args = collect(values(parser.kv_store))
     filter!(x -> !isnothing(x.value), args)
     filter!(x -> !(lstrip(x.args.long, '-') in excl) , args)
@@ -112,3 +113,22 @@ throw_on_exception(x::InteractiveUsage) = x.throw_on_exception
 """
 Base.haskey(parser::ArgumentParser, key::AbstractString) = haskey(parser.arg_store, arg2strkey(key))   
 Base.haskey(parser::ArgumentParser, key::Integer) = haskey(parser.kv_store, key)
+
+"""
+    shell_split(s::AbstractString) → String[]
+
+Split a string into a vector of args.
+
+`shell_split` is in internal function of `Base`. It is re-exported.
+
+# Examples
+```julia-repl
+julia> shell_split("--foo 3 -b bar")
+4-element Vector{String}:
+ "--foo"
+ "3"
+ "-b"
+ "bar"
+```
+"""
+function shell_split end

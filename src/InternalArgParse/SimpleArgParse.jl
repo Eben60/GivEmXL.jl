@@ -1,7 +1,21 @@
-module InternalArgParse
+module SimpleArgParse
 
+using Compat
 using OrderedCollections: OrderedDict
-using Base: shell_split
+import Base.shell_split
+
+# types
+export ArgForms, ArgumentParser, ArgumentValues, InteractiveUsage,
+    RealValidator, StrValidator
+
+# functions
+export shell_split, add_argument!, add_example!, args_pairs, colorprint, 
+    help, parse_args!, validate
+
+# in effect in Julia ≥ v1.11
+@compat public AbstractValidator # types
+@compat public generate_usage!, get_value, getcolor, parse_arg, set_value! # functions
+
 
 kwargssubset(allargs, keyssubset) = NamedTuple(k => allargs[k] for k in keyssubset if haskey(allargs, k))
 kwargssubset(allargs, t::Type) = kwargssubset(allargs, fieldnames(t))
@@ -13,18 +27,12 @@ function initparser(;kwargs...)
     return ArgumentParser(; interactive, apargs...)
 end
 
-export ArgumentParser, InteractiveUsage,
-    add_argument!, add_example!, generate_usage!, help, parse_args!, 
-    get_value, set_value!, colorize, getcolor, 
-    colorprint, args_pairs, 
-    validate, AbstractValidator, StrValidator, RealValidator,
-    shell_split
-
-export initparser
 
 include("validator.jl")
 include("datastructures.jl")
 include("functions.jl")
 include("utilities.jl")
+
+include("precompile.jl")
 
 end # module SimpleArgParse

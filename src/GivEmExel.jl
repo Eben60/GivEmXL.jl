@@ -9,9 +9,9 @@ isplot(::Any) = false
 save_plot(p::Any, fl) = Error("Saving plots not implemented for $(typeof(p)). You may want to implement your own method for GivEmExel.SavingResults: save_plot")
 
 
-include("InternalArgParse/InternalArgParse.jl")
+include("InternalArgParse/SimpleArgParse.jl")
 
-using .InternalArgParse
+using .SimpleArgParse
 # using SimpleArgParse
 
 
