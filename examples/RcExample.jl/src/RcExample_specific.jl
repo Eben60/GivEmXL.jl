@@ -100,3 +100,17 @@ function procsubset(i, pm_subset, overview, args...)
     df_row = (;no, a, τ, c, d, R, ϵ, comment, t_start, t_stop)
     return (;rs, df_row)
 end
+
+function stringify!(df)
+    for n in names(df)
+        df[!, n] = string.(df[!, n])
+    end
+    return nothing
+end
+
+function postproc(xlfile, datafiles, paramsets, overview, subsets_results)
+    df_summary = describe(combine2df(subsets_results))
+    stringify!(df_summary) 
+    @show df_summary
+    return (; dataframes=(; summary=df_summary))
+end

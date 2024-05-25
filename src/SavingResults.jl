@@ -118,7 +118,7 @@ function proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn, po
                 end    
             end
         end
-        isnothing(postproc_fn) || (résumé = procsubset_fn(xlfile, datafiles, paramsets, overview, subsets_results))
+        isnothing(postproc_fn) || (résumé = postproc_fn(xlfile, datafiles, paramsets, overview, subsets_results))
     catch exceptn
         back_trace = stacktrace(catch_backtrace())
         push!(errors,(;row=-1, comment="error opening of processing data file", exceptn, back_trace))
