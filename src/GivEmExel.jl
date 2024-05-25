@@ -1,6 +1,6 @@
 module GivEmExel
 using JuliaInterpreter
-using Unitful, DataFrames, XLSX, Preferences # , Plots
+using Unitful, DataFrames, XLSX, Preferences
 using NativeFileDialog: pick_file, pick_multi_file, pick_folder
 using PrecompileTools
 
@@ -12,10 +12,10 @@ save_plot(p::Any, fl) = Error("Saving plots not implemented for $(typeof(p)). Yo
 include("InternalArgParse/SimpleArgParse.jl")
 
 using .SimpleArgParse
-# using SimpleArgParse
+using .SimpleArgParse: get_value, getcolor
 
 
-export InternalArgParse
+# export SimpleArgParse
 export complete_interact, merge_params
 # export SavingResults
 # export prepare_xl, out_paths, write_errors, saveplots

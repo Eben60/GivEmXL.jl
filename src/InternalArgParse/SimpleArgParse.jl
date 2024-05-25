@@ -10,7 +10,7 @@ export ArgForms, ArgumentParser, ArgumentValues, InteractiveUsage,
 
 # functions
 export shell_split, add_argument!, add_example!, args_pairs, colorprint, 
-    help, parse_args!, validate
+    help, parse_args!, validate, initparser
 
 # in effect in Julia ≥ v1.11
 @compat public AbstractValidator # types

@@ -1,7 +1,7 @@
 module RcExample
 
 using Plots, XLSX, DataFrames, Unitful
-using GivEmExel, GivEmExel.SavingResults, GivEmExel.InternalArgParse
+using GivEmExel, GivEmExel.SavingResults, GivEmExel.SimpleArgParse
 using NonlinearSolve
 using Unitful: ϵ0
 
