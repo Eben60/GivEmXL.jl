@@ -2,11 +2,14 @@ module RcExample
 
 using Plots, XLSX, DataFrames, Unitful
 using GivEmExel, GivEmExel.SavingResults, GivEmExel.SimpleArgParse
-using NonlinearSolve
+using NonlinearSolve, Suppressor
 using Unitful: ϵ0
 
+
+postproc = nothing
+
 include("RcExample_specific.jl")
-export procwhole, procsubset
+export procwhole, procsubset, postproc
 
 prompt = "RcExample> "
 promptcolor = "cyan"

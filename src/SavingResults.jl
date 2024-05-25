@@ -100,10 +100,10 @@ function saveplots(rs, rslt_dir; plotformat = "png", kwargs...)
     return nothing
 end
 
-function proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn; throwonerr=false)
+function proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn, postproc_fn; throwonerr=false)
     subsets_results = []
     errors = []
-    overview = (;)
+    overview = résumé = (;)
     try
         isnothing(procwhole_fn) || (overview = procwhole_fn(xlfile, datafiles, paramsets))
         if !isnothing(procsubset_fn)
@@ -118,12 +118,13 @@ function proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn; th
                 end    
             end
         end
+        isnothing(postproc_fn) || (résumé = procsubset_fn(xlfile, datafiles, paramsets, overview, subsets_results))
     catch exceptn
         back_trace = stacktrace(catch_backtrace())
         push!(errors,(;row=-1, comment="error opening of processing data file", exceptn, back_trace))
         throwonerr && rethrow(exceptn)
     end
-    return (; overview, subsets_results, errors)
+    return (; overview, subsets_results, résumé, errors)
 end
 
 function combine2df(subsets_results)
@@ -141,23 +142,28 @@ function write_xl_tables(fl, nt_dfs; overwrite=true)
     XLSX.writetable(fl, ps; overwrite)
 end
 
-function save_dfs(overview, subsets_results, outf)
+function save_dfs(overview, subsets_results, résumé, outf)
     subsets_df = combine2df(subsets_results)
     overview_dfs = get(overview, :dataframes, nothing)
-    isnothing(overview_dfs) && (overview_dfs=(;))
-    dfs = (;)
+    résumé_dfs = get(résumé, :dataframes, nothing)
+    isnothing(overview_dfs) && (overview_dfs=(;)) # dataframes field of overview may be abscent, or may be dataframes=nothing
+    isnothing(résumé_dfs) && (résumé_dfs=(;))
+    dfs = merge(overview_dfs, résumé_dfs)
     if !isnothing(subsets_df) 
         subsets_df = prepare_xl(subsets_df)
-        dfs = merge(overview_dfs, (;SubsetsRslt=subsets_df))
+        dfs = merge(dfs, (;SubsetsRslt=subsets_df))
     end
 
     isempty(dfs) || write_xl_tables(outf, dfs)
     return dfs
 end
 
-function save_plots(overview, subsets_results, rslt_dir, paramsets)
-    plots = get(overview, :plots, nothing)
-    isnothing(plots) && (plots=(;))
+function save_plots(overview, subsets_results, résumé, rslt_dir, paramsets)
+    overview_plots = get(overview, :plots, nothing)
+    résumé_plots = get(résumé, :plots, nothing)
+    isnothing(overview_plots) && (overview_plots=(;))
+    isnothing(résumé_plots) && (résumé_plots=(;))
+    plots = merge(overview_plots, résumé_plots)
     ps1 = paramsets[1]
     ntkwargs = haskey(ps1, :plotformat) ? (; plotformat = ps1.plotformat) : (;)
     if !isempty(plots)
@@ -171,15 +177,15 @@ function save_plots(overview, subsets_results, rslt_dir, paramsets)
 end
 
 function save_results(results, xlfile, paramsets)
-    (; overview, subsets_results, errors) = results
+    (; overview, subsets_results, résumé, errors) = results
     (;fname, f_src, src_dir, rslt_dir, outf, errf) = out_paths(xlfile)
-    dfs = save_dfs(overview, subsets_results, outf)
-    save_plots(overview, subsets_results, rslt_dir, paramsets)
+    dfs = save_dfs(overview, subsets_results, résumé, outf)
+    save_plots(overview, subsets_results, résumé, rslt_dir, paramsets)
     write_errors(errf, errors)
     return (;dfs)
 end
 
-function proc_n_save(procwhole_fn, procsubset_fn;
+function proc_n_save(procwhole_fn, procsubset_fn, postproc_fn;
         xlfile,
         datafiles=nothing, 
         paramsets = [(;)],
@@ -188,10 +194,10 @@ function proc_n_save(procwhole_fn, procsubset_fn;
     throwonerr = get(paramsets[1], :throwonerr, false)
     # (;df_setup, df_exp) = read_xl_paramtables(xlfile; paramtables)
     # paramsets = exper_paramsets(paramsets, df_exp, df_setup);
-    results = proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn; throwonerr)
-    (; overview, subsets_results, errors) = results
+    results = proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn, postproc_fn; throwonerr)
+    (; overview, subsets_results, résumé, errors) = results
     (;dfs) = save_results(results, xlfile, paramsets)
-    return (; overview, subsets_results, errors, dfs) 
+    return (; overview, subsets_results, résumé, errors, dfs) 
 end
 
 end # module SavingResults

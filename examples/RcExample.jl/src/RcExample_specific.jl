@@ -19,9 +19,12 @@ function nl_lsq_fit(model, u0, xdata, ydata, p)
         return nothing
     end
 
-    prob = NonlinearLeastSquaresProblem(
-        NonlinearFunction(lossfn!, resid_prototype = similar(ydata)), u0, data)
-    sol = solve(prob)
+    sol = nothing
+    @suppress_err begin
+        prob = NonlinearLeastSquaresProblem(
+            NonlinearFunction(lossfn!, resid_prototype = similar(ydata)), u0, data)
+        sol = solve(prob)
+    end
     u = sol.u
     fit = model.(xdata, Ref(u), Ref(p))
     return (;sol, fit)
