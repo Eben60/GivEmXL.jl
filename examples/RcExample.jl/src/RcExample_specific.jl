@@ -74,7 +74,7 @@ function finalize_plot!(pl, params)
     return pl
 end
 
-function procwhole(xlfile, datafiles, paramsets)
+function preproc(xlfile, datafiles, paramsets)
     (; df, pl0) = readdata(xlfile)
     plots = (; pl0, plot_annotation="overview plot")
     # df1 = DataFrame([(; a=1, b=2)])
@@ -111,6 +111,5 @@ end
 function postproc(xlfile, datafiles, paramsets, overview, subsets_results)
     df_summary = describe(combine2df(subsets_results))
     stringify!(df_summary) 
-    @show df_summary
     return (; dataframes=(; summary=df_summary))
 end
