@@ -2,11 +2,11 @@ module GivEmExel
 using JuliaInterpreter
 using Unitful, DataFrames, XLSX, Preferences
 using NativeFileDialog: pick_file, pick_multi_file, pick_folder
-using PrecompileTools
+using PrecompileTools, Compat
 
 
 isplot(::Any) = false
-save_plot(p::Any, fl) = Error("Saving plots not implemented for $(typeof(p)). You may want to implement your own method for GivEmExel.SavingResults: save_plot")
+save_plot(p::Any, fl) = Error("Saving plots not implemented for $(typeof(p)). You may want to implement your own method for GivEmExel: save_plot")
 
 @compat public isplot, save_plot
 
@@ -24,8 +24,6 @@ using .SimpleArgParse: get_value, getcolor
 export complete_interact, merge_params
 export read_xl_paramtables, exper_paramsets
 
-using .SavingResults
-# export SavingResults
 export proc_n_save
 
 @compile_workload begin

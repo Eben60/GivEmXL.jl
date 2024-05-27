@@ -1,12 +1,3 @@
-module SavingResults
-
-using ..GivEmExel 
-using GivEmExel: isplot, save_plot
-
-using Unitful, DataFrames, XLSX 
-
-export proc_n_save
-
 function anyfy_col!(df, cname) 
     df[!, cname] = Vector{Any}(df[!, cname])
     return nothing
@@ -243,5 +234,3 @@ function proc_n_save(procwhole_fn, procsubset_fn, postproc_fn;
     (;dfs) = save_results(results, xlfile, paramsets)
     return (; overview, subsets_results, résumé, errors, dfs) 
 end
-
-end # module SavingResults

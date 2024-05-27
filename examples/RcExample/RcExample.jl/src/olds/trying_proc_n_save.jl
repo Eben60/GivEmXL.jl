@@ -1,9 +1,8 @@
 # using Unitful, DataFrames, XLSX, Plots
-using GivEmExel.SavingResults
 using GivEmExel
 using RcExample
 
-using GivEmExel.SavingResults: proc_data
+using GivEmExel: proc_data
 
 
 projbase = dirname(Base.active_project())

@@ -1,11 +1,11 @@
 module RcExample
 
 using Plots, XLSX, DataFrames, Unitful
-using GivEmExel, GivEmExel.SimpleArgParse # , GivEmExel.SavingResults
+using GivEmExel, GivEmExel.SimpleArgParse
 using NonlinearSolve, Suppressor
 using Unitful: ϵ0
 
-using GivEmExel.SavingResults: combine2df
+using GivEmExel: combine2df
 
 
 
