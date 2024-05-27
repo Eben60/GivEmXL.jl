@@ -15,6 +15,7 @@ using PrecompileTools: @setup_workload, @compile_workload
     d = Base.Filesystem.tempdir()
 
     @compile_workload begin
+        include("init_cli_options.jl")
         for fnm in testfiles
             # fnm = splitpath(f)[end]
             f = joinpath(sourcefolder, fnm)
