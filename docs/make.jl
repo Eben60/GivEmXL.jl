@@ -1,9 +1,6 @@
-parentpath = normpath(joinpath(@__DIR__),  "../")
-push!(LOAD_PATH, parentpath)
-
 using Pkg
-
-splitpath(Base.active_project())[end-1] == "docs" || Pkg.activate(@__DIR__)
+Pkg.activate(@__DIR__)
+Pkg.develop(PackageSpec(; path=(joinpath(@__DIR__, "../") |> normpath)))
 
 using Documenter
 using GivEmExel
