@@ -1,6 +1,6 @@
 using Pkg
 Pkg.activate(@__DIR__)
-Pkg.develop(PackageSpec(; path=(joinpath(@__DIR__, "../") |> normpath)))
+Pkg.develop(path=(joinpath(@__DIR__, "../") |> normpath))
 
 using Documenter
 using GivEmExel
