@@ -81,10 +81,31 @@ function exper_paramsets(specargs, df_exp, df_setup)
     return p_sets
 end
 
+
+"""
+    complete_interact(args; kwargs) → nothing
+
+description comes here
+
+# Arguments
+- `pp0::Union{Nothing, ArgumentParser}`: ArgumentParser for command line arguments.
+- `pps::NamedTuple`: ArgumentParsers for individual dialogs. The corresponding keys are: 
+    `[:gen_options, :spec_options, :exelfile_prompt, :datafiles_prompt, :next_file]`. To skip a dialog, skip the key.
+- `proc_data_fn(; xlfile, datafiles, paramsets)::Function=`: Function to do the actual data processing. It takes these three kwargs.
+
+# Keyword arguments
+- `basedir=nothing`: The base directory for the file selection dialogs.
+- `paramtables = (;setup="params_setup", exper="params_experiment")`: The names of the tables containing the corresponding parameters. 
+   Set a table to `nothing` to skip it.
+- `getexel=false`: If true, execute excel file selection dialog.
+- `getdata=(; dialogtype = :none)`: If `:none`, no data file selection dialog, 
+    otherwise the parameter will be passed to the `get_data` function to execute file/directory selection dialog.
+
+Function `complete_interact` is exported.
+"""
 function complete_interact(pp0, pps, proc_data_fn;
         basedir=nothing, 
         paramtables = (;setup="params_setup", exper="params_experiment"),
-        getexel=false,
         getdata=(; dialogtype = :none),
         )
 

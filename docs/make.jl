@@ -14,8 +14,8 @@ makedocs(
     sitename = "GivEmExel.jl",
     pages = Any[
         "Introduction" => "index.md", 
-        "API data processing" => "api_data-processing.md",
         "API user interaction" => "api_user-interaction.md",
+        "API data processing" => "api_data-processing.md",
         "Toy Example: Fit exp decay curves" => "rc_example.md"
         ],
     checkdocs = :exports, 

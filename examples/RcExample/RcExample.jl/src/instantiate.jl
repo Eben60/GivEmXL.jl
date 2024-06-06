@@ -1,5 +1,6 @@
 using Pkg
-basedir = splitdir(@__DIR__)[1]
+
+basedir = joinpath(@__DIR__, "..") |> normpath
 Pkg.activate(basedir)
 
 if isfile(joinpath(basedir, "../../../", "src/GivEmExel.jl"))

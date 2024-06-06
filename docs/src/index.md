@@ -43,7 +43,7 @@ eben@Macni2020M1 RcExample % ./rcex.sh
 press <ENTER>, then select Excel file.
 RcExample> 
 ```
-Here a file selection dialog opens, and he will point to the formerly prepared Excel file.
+Here a file selection dialog opens for the user to point to the formerly prepared Excel file.
 
 ```
 Completed processing /Users/eben/Julia/GivEmExel.jl/examples/RcExample/RcExample.jl/data/RcExampleData.xlsx
@@ -89,7 +89,7 @@ Options:
   -h, --help		Print the help message.
 ```
 
-As soon as the selected file is processed, the results will be put into a folder named YourExcelFileName_rslt: There will be an Excel file with the processing results (in this case containing two tables: one table with one results row per subset, and the summary table), and some graphic files: in this case an overview plot and one plot for each subset.
+As soon as the selected file is processed, the results will be put into a folder named *`YourExcelFileName`*`_rslt`: There will be an Excel file with the processing results (in this case containing two tables: one table with one results row per subset, and the summary table), and some graphic files: in this case an overview plot and one plot for each subset.
 
 Clean your data, rinse, repeat 😁
 
