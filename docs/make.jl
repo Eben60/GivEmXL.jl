@@ -16,7 +16,8 @@ makedocs(
         "Introduction" => "index.md", 
         "API user interaction" => "api_user-interaction.md",
         "API data processing" => "api_data-processing.md",
-        "Toy Example: Fit exp decay curves" => "rc_example.md"
+        "Toy Example: Fit exp decay curves" => "rc_example.md",
+        "Docstrings" => "docstrings.md"
         ],
     checkdocs = :exports, 
     warnonly = [:missing_docs],

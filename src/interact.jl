@@ -3,7 +3,7 @@
 
 Wrapper around Base.shell_split
 
-Function `parse_cl_string` is exported.
+Function `parse_cl_string` is public.
 """
 function parse_cl_string(s) 
     return string.(Base.shell_split(s))
@@ -11,6 +11,21 @@ end
 
 emptyargs() = Pair{Symbol, Any}[]
 
+"""
+    prompt_and_parse(pp::Nothing) = (;abort=false, argpairs = emptyargs())
+    prompt_and_parse(pp::ArgumentParser) → (;abort, argpairs)
+
+Prints a prompt, read and parses the input from the user. See the flow diagram in the documentation for details.
+
+# Arguments
+- `pp::Union{Nothing, ArgumentParser}`: ArgumentParser for command line arguments.
+
+# Returned NamedTuple
+- `abort::Bool`
+- `argpairs`: Vector of pairs `argname::Symbol => argvalue::Any`
+
+Function `prompt_and_parse` is public, not exported.
+"""
 function prompt_and_parse(pp)
     interactive = !isnothing(pp.interactive)
     add_argument!(pp, "-a", "--abort", 
@@ -49,6 +64,22 @@ end
 
 prompt_and_parse(pp::Nothing) = (;abort=false, argpairs = emptyargs())
 
+
+"""
+    proc_ARGS(pp0::Nothing) = (;abort=false, argpairs = emptyargs())
+    proc_ARGS(pp0::ArgumentParser) → (;abort, argpairs)
+
+Reads and parses the arguments provided to the script from the command line. See the flow diagram in the documentation for details.
+
+# Arguments
+- `pp0::Union{Nothing, ArgumentParser}`: ArgumentParser for command line arguments.
+
+# Returned NamedTuple
+- `abort::Bool`
+- `argpairs`: Vector of pairs `argname::Symbol => argvalue::Any`
+
+Function `proc_ARGS` is public, not exported.
+"""
 function proc_ARGS(pp0)
     proceed = true
     if !isnothing(pp0)
@@ -81,11 +112,12 @@ function exper_paramsets(specargs, df_exp, df_setup)
     return p_sets
 end
 
-
 """
     complete_interact(args; kwargs) → nothing
 
-description comes here
+This is the top level function for building the interaction with the user. See the flow diagram in the documentation for details.
+It calls [`proc_ARGS`](@ref) first, [`prompt_and_parse`](@ref) multiple times, and lets user pick file(s) by a GUI. 
+The inputs are merged with the parameter in the excel file, and all that passed to a user-provided function to perform the data processing.
 
 # Arguments
 - `pp0::Union{Nothing, ArgumentParser}`: ArgumentParser for command line arguments.
@@ -156,11 +188,6 @@ function complete_interact(pp0, pps, proc_data_fn;
         (;abort, ) = prompt_and_parse(pps.next_file)
         abort && return nothing 
     end
-
-
-    # proceed && push!(allargpairs, argpairs)
-    # @show allargpairs
-
 
     return nothing
 end
