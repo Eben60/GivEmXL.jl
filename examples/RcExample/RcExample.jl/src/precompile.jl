@@ -23,7 +23,7 @@ using PrecompileTools: @setup_workload, @compile_workload
             cp(f, fl; force=true)
             (;df_setup, df_exp) = read_xl_paramtables(fl; paramtables=(;setup="params_setup", exper="params_experiment"));
             paramsets = exper_paramsets(cliargs, df_exp, df_setup)
-            rslt = proc_n_save(preproc, procsubset, postproc; paramsets, xlfile=fl);
+            rslt = process_and_save(; paramsets, xlfile=fl);
         end
     end
 end

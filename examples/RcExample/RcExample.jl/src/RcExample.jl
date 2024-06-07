@@ -13,7 +13,7 @@ using GivEmExel: combine2df
 include("RcExample_specific.jl")
 
 # postproc = nothing # uncomment this line if you don't want a summary
-export preproc, procsubset, postproc
+# export preproc, procsubset, postproc
 
 prompt = "RcExample> "
 promptcolor = "cyan"
@@ -28,7 +28,9 @@ end
 batchfilename *= ext
 
 include("init_cli_options.jl")
-export pp0, pps
+
+process_and_save(; kwargs...) = proc_n_save(preproc, procsubset, postproc; kwargs...)
+export pp0, pps, process_and_save
 
 include("precompile.jl")
 
