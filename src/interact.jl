@@ -110,7 +110,7 @@ Merges `userargs` with the parameter in `df_setup` and in each row of `df_exp`
 - `df_exp::Union{Nothing, DataFrame}`: Experiment (subsets) parameter, as read from an excel file.
 - `df_setup::Union{Nothing, DataFrame}`: Experiment setup parameter, as read from an excel file. 
 
-Function `exper_paramsets` is public, not exported.
+Function `exper_paramsets` is exported.
 """
 function exper_paramsets(userargs, df_exp, df_setup)
     if isnothing(df_exp) & isnothing(df_setup)

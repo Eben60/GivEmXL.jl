@@ -64,7 +64,7 @@ Comment is any row starting with `#`
 # Returned NamedTuple
 - `(;df_setup::Union{Nothing, DataFrame}, df_exp::Union{Nothing, DataFrame}`
 
-Function `read_xl_paramtables` is public, not exported.
+Function `read_xl_paramtables` is exported.
 """
 function read_xl_paramtables(f_src; paramtables=(;setup="params_setup", exper="params_experiment"))
     (; setup, exper) = paramtables

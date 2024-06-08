@@ -1,11 +1,9 @@
 using PrecompileTools: @setup_workload, @compile_workload 
-using GivEmExel: read_xl_paramtables, exper_paramsets, proc_n_save
 
 # testfiles = ["data/RcExampleData.xlsx",
 # "data/MissingData.xlsx",
 # "data/BrokenData.xlsx",
 # ]
-
 
 @setup_workload begin
     testfiles = ["MissingData.xlsx",
