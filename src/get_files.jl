@@ -4,11 +4,11 @@
 
 Calls the function `NativeFileDialog:` `pick_file(datadir; filterlist)` to select an XLSX. 
 Passes the file to `read_xl_paramtables` to parse the parameter table(s)
-If `datadir` not provided, uses the cached value. Caches the selected directory. 
+If `basedir` not provided, uses the cached value. Caches the selected directory. 
 
 # Keyword arguments
 - `dialogtype`: dialogtype ∈ [:single, :multiple, :folder]
-- `datadir`: The base directory for file selection dialog.
+- `basedir`: The base directory for file selection dialog.
 
 # Returned NamedTuple
 - `abort::Bool`: Dialog cancelled by user

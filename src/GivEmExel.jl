@@ -20,11 +20,7 @@ include("SavingResults.jl")
 using .SimpleArgParse
 using .SimpleArgParse: get_value, getcolor
 
-# export SimpleArgParse
-export complete_interact, merge_params
-export read_xl_paramtables, exper_paramsets
-
-export proc_n_save
+export complete_interact, proc_n_save
 
 @compile_workload begin
     s2unit("100m/s^2")

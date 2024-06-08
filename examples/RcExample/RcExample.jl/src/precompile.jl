@@ -1,10 +1,10 @@
 using PrecompileTools: @setup_workload, @compile_workload 
+using GivEmExel: read_xl_paramtables, exper_paramsets, proc_n_save
 
 # testfiles = ["data/RcExampleData.xlsx",
 # "data/MissingData.xlsx",
 # "data/BrokenData.xlsx",
 # ]
-
 
 
 @setup_workload begin
@@ -23,7 +23,7 @@ using PrecompileTools: @setup_workload, @compile_workload
             cp(f, fl; force=true)
             (;df_setup, df_exp) = read_xl_paramtables(fl; paramtables=(;setup="params_setup", exper="params_experiment"));
             paramsets = exper_paramsets(cliargs, df_exp, df_setup)
-            rslt = process_and_save(; paramsets, xlfile=fl);
+            rslt = proc_n_save(preproc, procsubset, postproc; paramsets, xlfile=fl)
         end
     end
 end

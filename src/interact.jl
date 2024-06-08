@@ -99,7 +99,20 @@ end
 
 proc_ARGS(pp::Nothing) = prompt_and_parse(pp) 
 
-function exper_paramsets(specargs, df_exp, df_setup)
+
+"""
+    exper_paramsets(userargs, df_exp, df_setup) → Vector{NamedTuple}
+
+Merges `userargs` with the parameter in `df_setup` and in each row of `df_exp`
+   
+# Arguments
+- `userargs`: Arguments (e.g. as NamedTuple) 
+- `df_exp::Union{Nothing, DataFrame}`: Experiment (subsets) parameter, as read from an excel file.
+- `df_setup::Union{Nothing, DataFrame}`: Experiment setup parameter, as read from an excel file. 
+
+Function `exper_paramsets` is public, not exported.
+"""
+function exper_paramsets(userargs, df_exp, df_setup)
     if isnothing(df_exp) & isnothing(df_setup)
         p_sets = [(;)]
     elseif isnothing(df_exp)
@@ -108,25 +121,28 @@ function exper_paramsets(specargs, df_exp, df_setup)
         p_sets = [merge_params(df_exp, df_setup, row).nt for row in 1:nrow(df_exp)]
     end
 
-    p_sets = merge.(Ref(specargs), p_sets)
+    p_sets = merge.(Ref(userargs), p_sets)
     return p_sets
 end
 
 """
-    complete_interact(args; kwargs) → nothing
+    complete_interact(pp0, pps, proc_data_fn::Function; kwargs...) → nothing
+    complete_interact(pp0, pps, proc_data_fns::Tuple; kwargs...) → nothing
 
 This is the top level function for building the interaction with the user. See the flow diagram in the documentation for details.
 It calls [`proc_ARGS`](@ref) first, [`prompt_and_parse`](@ref) multiple times, and lets user pick file(s) by a GUI. 
-The inputs are merged with the parameter in the excel file, and all that passed to a user-provided function to perform the data processing.
+The inputs are merged with the parameter in the excel file, and all that passed to user-provided function(s) to perform the data processing.
 
 # Arguments
 - `pp0::Union{Nothing, ArgumentParser}`: ArgumentParser for command line arguments.
 - `pps::NamedTuple`: ArgumentParsers for individual dialogs. The corresponding keys are: 
     `[:gen_options, :spec_options, :exelfile_prompt, :datafiles_prompt, :next_file]`. To skip a dialog, skip the key.
-- `proc_data_fn(; xlfile, datafiles, paramsets)::Function=`: Function to do the actual data processing. It takes these three kwargs.
+- `proc_data_fn(; xlfile, datafiles, paramsets)::Function`: Function to do the actual data processing. It takes these three kwargs.
+- `proc_data_fns::Tuple`: Alternatively a tuple of three functions can be provides: 
+    For preprocessing, processing a subset, and postprocessing. See also [`proc_data`](@ref)
 
 # Keyword arguments
-- `basedir=nothing`: The base directory for the file selection dialogs.
+- `basedir=nothing`: The base directory for the file selection dialogs. If `basedir` not provided, uses the cached value.
 - `paramtables = (;setup="params_setup", exper="params_experiment")`: The names of the tables containing the corresponding parameters. 
    Set a table to `nothing` to skip it.
 - `getexel=false`: If true, execute excel file selection dialog.
@@ -135,9 +151,10 @@ The inputs are merged with the parameter in the excel file, and all that passed 
 
 Function `complete_interact` is exported.
 """
-function complete_interact(pp0, pps, proc_data_fn;
+function complete_interact(pp0, pps, proc_data_fn::Function;
         basedir=nothing, 
         paramtables = (;setup="params_setup", exper="params_experiment"),
+        getexel=false,
         getdata=(; dialogtype = :none),
         )
 
@@ -164,7 +181,7 @@ function complete_interact(pp0, pps, proc_data_fn;
         xlfile = datafiles = nothing
         (;abort, argpairs) = prompt_and_parse(pps.spec_options)
         abort && return nothing 
-        specargs = mergent(commonargs, argpairs)
+        userargs = mergent(commonargs, argpairs)
 
         if getexel
             (;abort, ) = prompt_and_parse(pps.exelfile_prompt)
@@ -173,9 +190,9 @@ function complete_interact(pp0, pps, proc_data_fn;
             abort && return nothing 
 
             (; df_setup, df_exp) = xlargs
-            paramsets = exper_paramsets(specargs, df_exp, df_setup)
+            paramsets = exper_paramsets(userargs, df_exp, df_setup)
         else
-            paramsets = specargs
+            paramsets = userargs
         end
 
         if getdata.dialogtype != :none
@@ -190,4 +207,15 @@ function complete_interact(pp0, pps, proc_data_fn;
     end
 
     return nothing
+end
+
+function complete_interact(pp0, pps, proc_data_fns::Tuple;
+    basedir=nothing, 
+    paramtables = (;setup="params_setup", exper="params_experiment"),
+    getexel=false,
+    getdata=(; dialogtype = :none),
+    )
+    preproc, procsubset, postproc = proc_data_fns
+    proc_data_fn(; kwargs...) = proc_n_save(preproc, procsubset, postproc; kwargs...)
+    return complete_interact(pp0, pps, proc_data_fn; basedir, paramtables, getexel, getdata)
 end
