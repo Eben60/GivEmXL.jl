@@ -1,7 +1,7 @@
-export complete_interact
+export complete_interact, proc_n_save
 
 @compat public get_data, merge_params, get_xl, read_xl_paramtables, parse_cl_string, args_pairs, proc_ARGS, prompt_and_parse, 
-    save_all_plots, save_results, combine2df, write_xl_tables, write_errors, saveplots
+    save_all_plots, save_results, combine2df, write_xl_tables, write_errors, saveplots, proc_data
 
 
 # # # # # #

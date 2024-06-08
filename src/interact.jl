@@ -3,7 +3,7 @@
 
 Wrapper around Base.shell_split
 
-Function `parse_cl_string` is public.
+Function `parse_cl_string` is public, not exported.
 """
 function parse_cl_string(s) 
     return string.(Base.shell_split(s))
