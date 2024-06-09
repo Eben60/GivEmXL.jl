@@ -8,9 +8,11 @@ Let's assume you are the only `Julia`  user/programmer among your colleagues. Ac
 
 Now, you have developed a script for some computation or data analysis which they would be glad to use – but asking them to accept your programmers workflow would be asking too much. Building a full GUI for your script to be used by merely a couple of users would be an expensive overkill. Enter `GivEmExel`: with this package you are able to produce "somewhat interactive" packages for use by your non-programming colleagues.
 
+My motivation was actually initially different. I used a Julia script to process experimental data, and for each experiment there were about a dozen or so of experiment-specific parameter plus a dozen of parameters specific for each separate measurement within the experiment. For each measurement, my script produced a further dozen of numbers. Using MS Excel proved to be a practical way to manage the parameter and results and to share them with the colleagues. Then with a bit of additional programming I could also share the script itself and let them process their data on their own: That happened to be a nice side effect.
+
 ## Toy example - evaluation of capacitor discharge curves
 
-See the source under `examples/RcExample`
+See the source under [`examples/RcExample`](https://github.com/Eben60/GivEmExel.jl/tree/main/examples/RcExample)
 
 ### From the point of view of user
 
@@ -45,7 +47,7 @@ eben@Macni2020M1 RcExample % ./rcex.sh
 press <ENTER>, then select excel file.
 RcExample> 
 ```
-Here a file selection dialog opens for the user to point to the formerly prepared excel file.
+Here a file selection dialog opens for the user to point to the formerly prepared excel file. You select the file, it will be processed, and you will be prompted for the next one:
 
 ```
 Completed processing /Users/eben/Julia/GivEmExel.jl/examples/RcExample/RcExample.jl/data/RcExampleData.xlsx
@@ -54,41 +56,7 @@ RcExample> -a
 eben@Macni2020M1 RcExample % 
 ```
 
-Entering -h or --help at any stage of the dialog helps:
-
-```
-eben@Macni2020M1 RcExample % ./rcex.sh -h
-
-Usage:  [-p|--plotformat <String>] [-e|--throwonerr] [-h|--help]
-
-Command line options parser
-
-Options:
-  -p, --plotformat <String>	Accepted file format: PNG (default), PDF, SVG or NONE
-  -e, --throwonerr		If false, exceptions will be caught and stack trace saved to file. If true, program run interrupted, and stack trace printed. Default is false
-  -h, --help		Print the help message.
-
-Examples:
-  $ >  rcex.sh --plotformat NONE
-  $ >  rcex.sh -e
-  $ >  rcex.sh --help
-
-eben@Macni2020M1 RcExample %
-```
-
-```
-eben@Macni2020M1 RcExample % ./rcex.sh   
-press <ENTER>, then select excel file.
-RcExample> -h
-
-Usage:  [-a|--abort] [-h|--help]
-
-Prompt for excel file
-
-Options:
-  -a, --abort		Abort switch.
-  -h, --help		Print the help message.
-```
+If unsure, it is possible to enter `-h` or `--help` at any stage of the dialog.
 
 As soon as the selected file is processed, the results will be put into a folder named *`YourExcelFileName`*`_rslt`: There will be an excel file with the processing results (in this case containing two tables: one table with one results row per subset, and the summary table), and some graphic files: in this case an overview plot and one plot for each subset.
 
@@ -96,7 +64,7 @@ Clean your data, rinse, repeat 😁
 
 ### From the point of view of developer
 
-After, or on the course of, finishing to program what your package is expected to do, define the parameter and units to be communicated to your app. Those can be transferred by way of cli parameter, or through a file in XLSX format. In our toy example the plotting format can be passed as cli parameter, e.g.
+After, or in the course of, finishing to program what your package is expected to do, define the parameter and units to be communicated to your app. Those can be transferred by way of cli parameter, or through a file in XLSX format. In our toy example the plotting format can be passed as cli parameter, e.g.
 ```
 $ >  rcex.sh --plotformat PDF
 ```
@@ -104,10 +72,10 @@ whereas for the experiment parameter like `area` and `ϵ`, we use excel. However
 
 In our example, the experimental data are in a separate table in the same excel file. We could also let the user to point to a separate file or folder, or conclude to the data file from the name or position of the excel file.
 
-It is assumed, your calculation processes multiple data subsets: In our example there are three segments (three capacitor discharges). For a case of a computation or dataset without subsets, represent it sa a case with one subset. We divide our processing into three separate functions: Preprocessing / processing each subset / postprocessing. In our toy example these functions are: `preproc`, `procsubset`, `postproc`. You can however skip some steps if you don't need them. In our toy example you can uncomment the line 
+It is assumed that your calculation processes multiple data subsets: In our example there are three segments (three capacitor discharges). For a case of a computation or dataset without subsets, represent it as a case with one subset. We divide our processing into three separate functions: Preprocessing / processing each subset / postprocessing. In our toy example these functions are: `preproc`, `procsubset`, `postproc`. You can however skip some steps if you don't need them. In our toy example you can uncomment the line 
 ```
 # postproc = nothing 
 ```
-just with the effect that no useless summary will now be produced. Our functions are expected to return dataframes or dataframe rows, and plot objects. In our example, we use `Plots.jl`. `Makie.jl` is also supported out of the box, for other plotting packages you will need to additionally write a dozen of LOCs.
+just with the effect that no useless summary will now be produced. Our functions are expected to return dataframes or dataframe rows, and plot objects. In our example, we use `Plots.jl`. `Makie.jl` is also supported out of the box. For other plotting packages you will need to additionally write a dozen of LOCs.
 
 The returned dataframes will be saved as an excel file with multiple tables, the plots saved in the selected format. Voilà!
