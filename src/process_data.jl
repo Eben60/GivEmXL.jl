@@ -91,8 +91,6 @@ Unitful.FreeUnits{(s,), 𝐓, nothing}
 read_units(df_setup) = NamedTuple((k, s2unit(v)) for (k, v) in pairs(df_setup[2, :]))
 read_units(d::Nothing) = (;)
 
-# keys_skipmissing(nt) = [k for (k, v) in pairs(nt) if !ismissing(v)]
-
 nt_skipmissing(nt) = NamedTuple((k, v) for (k, v) in pairs(nt) if !ismissing(v))
 
 """
