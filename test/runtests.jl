@@ -2,7 +2,7 @@ using GivEmExel
 using Test, Unitful, OrderedCollections, Aqua, DataFrames
 
 using GivEmExel: merge_params, nt_skipmissing, read_units, mergent, s2unit, nt_skipmissing, nt2unitful, mergent, 
-    exper_paramsets, combine2df
+    exper_paramsets, combine2df, out_paths
 
 if !(isdefined(@__MODULE__, :complete_tests) && !complete_tests) 
     Aqua.Aqua.test_all(GivEmExel; ambiguities = false)
@@ -50,5 +50,11 @@ ntmerged = (;a = 1, b = 2, c = 3, d = 4, e = 6, f = 7)
 @test isnothing(combine2df([((;a=1, b=2)), (;a=3, b=4)]))
 df = combine2df([(;df_row=(;a=1, b=2)), (;df_row=(;a=3, b=4))])
 @test df == DataFrame(a=[1,3], b=[2,4])
+
+f_src = "/foo/bar/notadir/notafile.xlsx"
+
+@test_throws ErrorException out_paths(f_src; fakefile=true)
+
+
 end
 ;
