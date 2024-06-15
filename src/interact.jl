@@ -147,7 +147,7 @@ The inputs are merged with the parameter in the excel file, and all that passed 
    Set a table to `nothing` to skip it.
 - `getexel=false`: If true, execute excel file selection dialog.
 - `getdata=(; dialogtype = :none)`: If `:none`, no data file selection dialog, 
-    otherwise the parameter will be passed to the `get_data` function to execute file/directory selection dialog.
+    otherwise the parameter will be passed to the [`get_data`](@ref) function to execute file/directory selection dialog.
 
 Function `complete_interact` is exported.
 """

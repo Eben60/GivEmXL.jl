@@ -76,6 +76,6 @@ It is assumed that your calculation processes multiple data subsets: In our exam
 ```
 # postproc = nothing 
 ```
-just with the effect that no useless summary will now be produced. Our functions are expected to return dataframes or dataframe rows, and plot objects. In our example, we use `Plots.jl`. `Makie.jl` is also supported out of the box. For other plotting packages you will need to additionally write a dozen of LOCs.
+just with the effect that no useless summary will now be produced. Our functions are expected to return dataframes or dataframe rows, and plot objects. In our example, we use `Plots.jl`. `Makie.jl` is also supported out of the box. For other plotting packages, you will need to add a few code lines.
 
 The returned dataframes will be saved as an excel file with multiple tables, the plots saved in the selected format. Voilà!
