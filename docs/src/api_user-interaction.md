@@ -31,7 +31,7 @@ For details, see [`complete_interact` documentation](@ref GivEmExel.complete_int
 
 ### Batch scripts
 
-Copy and if necessary adjust the relevant scripts (`.bat` for Windows, `.sh` for Linux/mac) from the Toy Example. These scripts do nothing else but execute Julia with the corresponding julia script.
+Copy and if necessary adjust the relevant scripts (`.bat` for Windows, `.sh` for Linux/Mac) from the [Toy Example](@ref "Toy Example: Fit exp decay curves"). These scripts do nothing else but execute Julia with the corresponding julia script.
 
 ### Any questions?
 

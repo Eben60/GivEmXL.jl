@@ -40,7 +40,7 @@ It is expected to return a `NamedTuple` as following `(;plots, :dataframes)` - s
 
 ### Plot objects
 
-If your data processing functions return `Plots` or `Makie` objects, that is supported out of the box. If you use some other package, or maybe want to save some other objects instead of or additionally to the plots, you have to define your own methods for in the following way (see also package extension files in the `GivEmExel` folder `ext/` as an example):
+If your data processing functions return `Plots` or `Makie` objects, that is supported out of the box. If you use some other package, or maybe want to save some other objects instead of or additionally to the plots, you have to define your own methods for two functions like following (see also package extension files in the `GivEmExel`'s folder `ext/` as an example):
 
 ```
 import GivEmExel: isplot, save_plot

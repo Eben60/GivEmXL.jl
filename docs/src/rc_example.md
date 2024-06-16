@@ -1,18 +1,30 @@
 ## Toy Example: Fit exp decay curves
 
-### Parameter definition
+We read the both parameter tables and the data all from the same excel file. The data is a `y(t)` dependence containing several spans of exponential decay which we fit by non-linear least squares according to the formula `a * exp(-(x-t₀)/τ)`, where `t₀` is the span beginning and not fitted. The decay represents a capacitor discharge over a known resistor `R`, with given `area` and `ϵ` we calculate the thickness of the capacitors dielectric.
 
-Actually we already have discussed the both tables [here](@ref "From the point of view of user"), please re-read the section. The corresponding file is under [`examples/RcExample/RcExample.jl/data/RcExampleData.xlsx](https://github.com/Eben60/GivEmExel.jl/blob/main/examples/RcExample/RcExample.jl/data/RcExampleData.xlsx).
+We plot an overview plot of the data as well as plots of each span. The span start and end are the subset parameter in the table "params_experiment". The results are saved into two tables of an excel file: "`SubsetsRslt`" and "`summary`".
 
-### Parameter passed to data processing functions
-- `xlfile::String`: path to the exel file (in general case, `Union{Nothing, String}`)
-- `datafiles::Nothing`: we put our data into the same exel file (in general case, `Union{Nothing, String, Vector{String}}`)
-- `paramsets::Vector{NamedTuple}`: In our case, there will be 3 NamedTuples, one for each row of the table `params_experiment`. Each NamedTuple will contain the data as defined in the corresponding row as well a (repeating) data from the user input (here only `plotformat` defined) and the table table `params_experiment`, e.g. 
-```
-julia> paramsets[1]
-(plotformat = "png", throwonerr = true, area = 0.5 cm², Vunit = mV, timeunit = s, Cunit = nF, R = 5 GΩ, t_start = 1 s, t_stop = 4 s, ϵ = 3.7, no = 1, plot_annotation = "first discharge", comment = "first discharge – 1")
-```
+### User interaction
 
-### Preprocessing
+The user runs from from a terminal window a batch script `rcex.sh` / `rcex.bat` (invoking `rcex.jl`), to which he can optionally provide parameter `-h` / `--help` or `-p` / `--plotformat`. These options are defined through the variable `pp0::SimpleArgParse.ArgumentParser` which is initialized in the file `init_cli_options.jl`. The user will be asked to point to "his" excel file with the parameter and data, and a GUI dialog opens. There are three excel files provided in the folder `data/` of the example package. You may try it first with the file `RcExampleData.xlsx`.
 
-The function `preproc(xlfile, datafiles, paramsets)` is defined in the file [`examples/RcExample/RcExample.jl/src/RcExample_specific.jl](https://github.com/Eben60/GivEmExel.jl/blob/main/examples/RcExample/RcExample.jl//src/RcExample_specific.jl). We have the free choice in respect to the name of the function. The function must take three arguments discussed above, however in our case it actually uses the first one only and ignores the other. It reads the data from the table `data` of the same excel file, produces a overviews plot using the package `Plots`. The function and returns a NamedTuple of NamedTuples as following:
+Upon processing and saving the results, a corresponding message is printed, and either a next file can be selected, or processing finished by typing `-a` / `--abort`. These interactions are defined by the variable `pps`, which is a `NamedTuple` of `ArgumentParser`s.
+
+### Processing functions
+
+We define following functions in the file `RcExample_specific.jl`
+- `preproc`: Reads the data into a `DataFrame` to be passed downstream, and produces the overview plot-
+- `procsubset`: Does the fit on each span, and makes a plot.
+- `postproc`: Applies `DataFrames` statistics to the results.
+
+### User invoked script
+
+The `rcex.jl` has just one executable line (apart from the `using` statements). We have already discussed most of the parameters passed to the [`complete_interact`](@ref GivEmExel.complete_interact) function. `getexel=true` and `getdata=(; dialogtype = :none)` tell that there should be a GUI dialog for an excel file only.
+
+### Error processing
+
+There are two more excel files there: in `MissingData.xlsx`, some `y` values are missing in one of the spans, wheras in `BrokenData.xlsx` the expected `data` table is missing completely. In the first case, the data is processed as far as possible, and error information saved into the file named `MissingData_err.txt`, and in the second, only the file `BrokenData_err.txt` will be saved. If the flag `--throwonerr` was provided, the program would throw on the first error with the usual screenfull of information.
+
+### Development process
+
+See file `noninteractive_test.jl` for how to supply the parameters to your processing functions in the course of the development process.
