@@ -159,6 +159,7 @@ function complete_interact(pp0, pps, proc_data_fn::Function;
         )
 
     # getdata = merge((;dialogtype=:none, filterlist="", basedir=nothing), getdata)
+    pps = _deepcopy(pps)
     pps = merge((;gen_options=nothing, spec_options=nothing, 
         exelfile_prompt=nothing, next_file=nothing,
         datafiles_prompt=nothing,
@@ -219,3 +220,7 @@ function complete_interact(pp0, pps, proc_data_fns::Tuple;
     proc_data_fn(; kwargs...) = proc_n_save(preproc, procsubset, postproc; kwargs...)
     return complete_interact(pp0, pps, proc_data_fn; basedir, paramtables, getexel, getdata)
 end
+
+_deepcopy(x) = deepcopy(x)
+
+_deepcopy(nt::NamedTuple) = NamedTuple([k => _deepcopy(v) for (k, v) in pairs(nt)])
