@@ -159,8 +159,7 @@ function complete_interact(pp0, pps, proc_data_fn::Function;
         )
 
     # getdata = merge((;dialogtype=:none, filterlist="", basedir=nothing), getdata)
-    pps = _deepcopy(pps)
-    pps = merge((;gen_options=nothing, spec_options=nothing, 
+    pps0 = merge((;gen_options=nothing, spec_options=nothing, 
         exelfile_prompt=nothing, next_file=nothing,
         datafiles_prompt=nothing,
         ), pps)
@@ -179,6 +178,7 @@ function complete_interact(pp0, pps, proc_data_fn::Function;
     commonargs = mergent(allargpairs)
 
     while true
+        pps = _deepcopy(pps0)
         xlfile = datafiles = nothing
         (;abort, argpairs) = prompt_and_parse(pps.spec_options)
         abort && return nothing 
@@ -222,5 +222,4 @@ function complete_interact(pp0, pps, proc_data_fns::Tuple;
 end
 
 _deepcopy(x) = deepcopy(x)
-
 _deepcopy(nt::NamedTuple) = NamedTuple([k => _deepcopy(v) for (k, v) in pairs(nt)])
