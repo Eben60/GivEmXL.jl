@@ -1,6 +1,6 @@
 module RcExample
 
-using GivEmExel, GivEmExel.SimpleArgParse
+using GivEmExel, SimpleArgParse2
 using GivEmExel: combine2df
 using Plots, XLSX, DataFrames, Unitful, NonlinearSolve, Suppressor
 using Unitful: ϵ0

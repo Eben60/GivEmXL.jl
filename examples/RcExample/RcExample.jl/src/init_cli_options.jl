@@ -1,5 +1,5 @@
 pp0 = let
-    pp = initparser(; 
+    pp = initparser(InteractiveArgumentParser;
         description="Command line options parser", 
         add_help=true, 
         color = promptcolor, 
@@ -17,9 +17,9 @@ pp0 = let
     description="If false, exceptions will be caught and stacktrace saved to file. If true, program run interrupted, and stacktrace printed. Default is false", 
     ) 
         
-    add_example!(pp, "$(pp.interactive.prompt) $batchfilename --plotformat NONE")
-    add_example!(pp, "$(pp.interactive.prompt) $batchfilename -e")
-    add_example!(pp, "$(pp.interactive.prompt) $batchfilename --help")
+    add_example!(pp, "$(pp.prompt) $batchfilename --plotformat NONE")
+    add_example!(pp, "$(pp.prompt) $batchfilename -e")
+    add_example!(pp, "$(pp.prompt) $batchfilename --help")
     pp
 end
 
@@ -29,7 +29,7 @@ gen_options = nothing
 spec_options = nothing
 
 next_file = let
-    pp = initparser(; 
+    pp = initparser(InteractiveArgumentParser;
         description="Prompt for next file", 
         add_help=true, 
         color = promptcolor, 
@@ -37,14 +37,14 @@ next_file = let
         prompt=prompt,
         )
     
-    add_example!(pp, "$(pp.interactive.prompt) --abort")
-    add_example!(pp, "$(pp.interactive.prompt) -a")
-    add_example!(pp, "$(pp.interactive.prompt) --help")
+    add_example!(pp, "$(pp.prompt) --abort")
+    add_example!(pp, "$(pp.prompt) -a")
+    add_example!(pp, "$(pp.prompt) --help")
     pp
 end
 
 exelfile_prompt = let
-    pp = initparser(; 
+    pp = initparser(InteractiveArgumentParser;
         description="Prompt for Excel file", 
         add_help=true, 
         color = promptcolor, 
