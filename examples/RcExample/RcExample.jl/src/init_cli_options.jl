@@ -1,5 +1,5 @@
 pp0 = let
-    pp = initparser(InteractiveArgumentParser;
+    pp = initparser(ArgumentParser;
         description="Command line options parser", 
         add_help=true, 
         color = promptcolor, 
@@ -17,9 +17,9 @@ pp0 = let
     description="If false, exceptions will be caught and stacktrace saved to file. If true, program run interrupted, and stacktrace printed. Default is false", 
     ) 
         
-    add_example!(pp, "$(pp.prompt) $batchfilename --plotformat NONE")
-    add_example!(pp, "$(pp.prompt) $batchfilename -e")
-    add_example!(pp, "$(pp.prompt) $batchfilename --help")
+    add_example!(pp, " $batchfilename --plotformat NONE")
+    add_example!(pp, " $batchfilename -e")
+    add_example!(pp, " $batchfilename --help")
     pp
 end
 
