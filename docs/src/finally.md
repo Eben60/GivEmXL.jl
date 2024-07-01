@@ -6,9 +6,6 @@ xx.yy.2024 -
 
 Star on GitHub, open an issue, contact me on Julia Discourse.
 
-## Acknoledgements
-
-The package [`SimpleArgParse`](https://github.com/admercs/SimpleArgParse.jl), originally from Adam Erickson, included into GivEmExel in a substantially modified form.
 
 ## Copyright and License
 
