@@ -27,7 +27,7 @@ Prints a prompt, read and parses the input from the user. See the flow diagram i
 Function `prompt_and_parse` is public, not exported.
 """
 function prompt_and_parse(pp)
-    interactive = !isnothing(pp.interactive)
+    interactive = pp isa InteractiveArgumentParser
     add_argument!(pp, "-a", "--abort", 
             type=Bool, 
             default=false, 
@@ -37,8 +37,8 @@ function prompt_and_parse(pp)
     ps = nothing
 
     while true
-        colorprint(pp.interactive.introduction, color)
-        colorprint(pp.interactive.prompt, color, false)
+        colorprint(pp.introduction, color)
+        colorprint(pp.prompt, color, false)
         answer = readline()
         cli_args = parse_cl_string(answer)
         r = parse_args!(pp; cli_args)

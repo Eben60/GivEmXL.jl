@@ -2,7 +2,7 @@ using GivEmExel
 using GivEmExel.InternalArgParse
 
 pp0 = let
-    pp = initparser(; 
+    pp = initparser(InteractiveArgumentParser;
         description="Command line options parser", 
         add_help=true, 
             color = "magenta", 
@@ -15,14 +15,14 @@ pp0 = let
         validator=StrValidator(; upper_case=true, patterns=["DOC", "TXT", "RTF", "ODT"]),
         )
     
-    add_example!(pp, "$(pp.interactive.prompt) --fileformat ODT")
-    add_example!(pp, "$(pp.interactive.prompt) --help")
+    add_example!(pp, "$(pp.prompt) --fileformat ODT")
+    add_example!(pp, "$(pp.prompt) --help")
     pp
 end
 
 
 gen_options = let
-    pp = initparser(; 
+    pp = initparser(InteractiveArgumentParser;
         description="Prompt for general options", 
         add_help=true, 
             color = "cyan", 
@@ -38,9 +38,9 @@ gen_options = let
         validator=StrValidator(; upper_case=true, patterns=["PNG", "SVG", "PDF", "TIF"]),
         )
     
-    add_example!(pp, "$(pp.interactive.prompt) SVG")
-    add_example!(pp, "$(pp.interactive.prompt) <ENTER>")
-    add_example!(pp, "$(pp.interactive.prompt) --help")
+    add_example!(pp, "$(pp.prompt) SVG")
+    add_example!(pp, "$(pp.prompt) <ENTER>")
+    add_example!(pp, "$(pp.prompt) --help")
     pp
 end
 
@@ -48,7 +48,7 @@ end
 spec_options = nothing
 
 spec_options = let
-    pp = initparser(; 
+    pp = initparser(InteractiveArgumentParser;
         description="Prompt for specific options", 
             add_help=true, 
             color = "cyan", 
@@ -62,14 +62,14 @@ spec_options = let
         description="Binary mode switch.",
         )            
 
-    add_example!(pp, "$(pp.interactive.prompt) --binary")
-    add_example!(pp, "$(pp.interactive.prompt) -b")
-    add_example!(pp, "$(pp.interactive.prompt) --help")
+    add_example!(pp, "$(pp.prompt) --binary")
+    add_example!(pp, "$(pp.prompt) -b")
+    add_example!(pp, "$(pp.prompt) --help")
     pp
 end
 
 next_file = let
-    pp = initparser(; 
+    pp = initparser(InteractiveArgumentParser;
         description="Prompt for next file", 
         add_help=true, 
         color = "cyan", 
@@ -77,14 +77,14 @@ next_file = let
         prompt="GivEmExel> ",
         )
     
-    add_example!(pp, "$(pp.interactive.prompt) --abort")
-    add_example!(pp, "$(pp.interactive.prompt) -a")
-    add_example!(pp, "$(pp.interactive.prompt) --help")
+    add_example!(pp, "$(pp.prompt) --abort")
+    add_example!(pp, "$(pp.prompt) -a")
+    add_example!(pp, "$(pp.prompt) --help")
     pp
 end
 
 exelfile_prompt = let
-    pp = initparser(; 
+    pp = initparser(InteractiveArgumentParser;
         description="Prompt for Excel file", 
         add_help=true, 
         color = "cyan", 

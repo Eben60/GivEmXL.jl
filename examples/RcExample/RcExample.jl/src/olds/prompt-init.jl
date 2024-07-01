@@ -22,9 +22,9 @@ pp0 = let
     description="If false, exceptions will be cought and stacktrace saved to file. If true, program run interrupted, and stacktrace printed. Default is false", 
     ) 
         
-    add_example!(pp, "$(pp.interactive.prompt) $fname --plotformat NONE")
-    add_example!(pp, "$(pp.interactive.prompt) $fname -e")
-    add_example!(pp, "$(pp.interactive.prompt) $fname --help")
+    add_example!(pp, "$(pp.prompt) $fname --plotformat NONE")
+    add_example!(pp, "$(pp.prompt) $fname -e")
+    add_example!(pp, "$(pp.prompt) $fname --help")
     pp
 end
 
@@ -44,9 +44,9 @@ next_file = let
             ), 
         )
     
-    add_example!(pp, "$(pp.interactive.prompt) --abort")
-    add_example!(pp, "$(pp.interactive.prompt) -a")
-    add_example!(pp, "$(pp.interactive.prompt) --help")
+    add_example!(pp, "$(pp.prompt) --abort")
+    add_example!(pp, "$(pp.prompt) -a")
+    add_example!(pp, "$(pp.prompt) --help")
     pp
 end
 
