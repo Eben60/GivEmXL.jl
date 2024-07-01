@@ -6,7 +6,6 @@ xx.yy.2024 -
 
 Star on GitHub, open an issue, contact me on Julia Discourse.
 
-
 ## Copyright and License
 
 (c) Eben60 2024

@@ -1,6 +1,12 @@
+using Pkg
+Pkg.activate(@__DIR__)
+Pkg.develop(path=(joinpath(@__DIR__, "../") |> normpath))
+
 using Documenter
 using GivEmExel
 
+# generate documentation locally. 
+# keep in mind .gitignore - deps/deps.jl
 makedocs(
     modules = [GivEmExel],
     format = Documenter.HTML(; prettyurls = (get(ENV, "CI", nothing) == "true")),
@@ -19,10 +25,12 @@ makedocs(
     # strict = true,
     # clean = true,
 )
-
-deploydocs(
-    repo = "github.com/Eben60/GivEmExel.jl.git",
-    versions = nothing,
-    push_preview = true
-)
 ;
+
+# deployment done on the server anyway
+# don't normally run deploydocs here
+# deploydocs(
+#     repo = "github.com/Eben60/GivEmExel.jl.git",
+#     versions = nothing,
+#     push_preview = true
+# )
