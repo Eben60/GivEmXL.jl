@@ -1,5 +1,5 @@
 using Pkg
-basedir = path=(joinpath(@__DIR__, "../") |> normpath)
+basedir = path=(joinpath(@__DIR__, "../../") |> normpath)
 Pkg.activate(basedir)
 
 """
@@ -11,9 +11,11 @@ using RcExample
 using GivEmExel 
 
 
-sourcefolder = normpath(joinpath(@__DIR__, "..", "data"))
+sourcefolder = normpath(joinpath(Main.basedir, "data"))
 
 fl = joinpath(sourcefolder, "RcExample-1curve.xlsx")
+
+@assert isfile(fl)
 
 plotformat="png"
 throwonerr=true

@@ -13,16 +13,16 @@ end
 function easyexpfit(ts, ys, t₀ᵢ)
     ts = ts .- t₀ᵢ
     fit = fitexp(ts, ys)
-    return (; a=fit.a, τ=fit.b, c=fit.c, Rpears=fit.R, ypred=fit.ypred)
+    return (; a=fit.a, τ=fit.b, y₀=fit.c, Rpears=fit.R, ypred=fit.ypred)
 end
 
 function proc_dataspan(df, t_start, t_stop)
     t_start = t_start |> ustrip
     t_stop = t_stop |> ustrip
     (; ts, ys) = timerange(df, t_start, t_stop);
-    (; a, τ, c, Rpears, ypred) = easyexpfit(ts, ys, t_start)
+    (; a, τ, y₀, Rpears, ypred) = easyexpfit(ts, ys, t_start)
     pl = plot(ts, [ys, ypred]; label = ["experiment" "fit"])
-    return (;a, τ, c, Rpears,  pl)
+    return (;a, τ, y₀, Rpears,  pl)
 end
 
 function readdata(fl)
@@ -64,15 +64,16 @@ function procsubset(i, pm_subset, overview, args...)
     (; area, Vunit, timeunit, Cunit, R, ϵ, no, plot_annotation, comment, t_start, t_stop) = pm_subset
     df = overview.data.df
     rslt = proc_dataspan(df, t_start, t_stop)
-    (;a, τ, c, Rpears, pl) = rslt
+    (;a, τ, y₀, Rpears,  pl) = rslt
     finalize_plot!(pl, pm_subset)
-    rs = (;subset=i, no, a, τ, c, Rpears, pl, plot_annotation)
+    rs = (;subset=i, no, a, τ, y₀, Rpears, pl, plot_annotation)
     a *= Vunit
+    y₀ *= Vunit
     τ *= timeunit
     c = (τ / R) 
     c = c |> Cunit 
     d = calc_thickness(c, ϵ, area)
-    df_row = (;no, a, τ, c, Rpears, d, R, ϵ, comment, t_start, t_stop)
+    df_row = (;no, a, τ, y₀, Rpears, c, d, R, ϵ, comment, t_start, t_stop)
     return (;rs, df_row)
 end
 
