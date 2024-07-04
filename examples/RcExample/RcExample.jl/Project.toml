@@ -4,7 +4,6 @@ authors = ["Eben60"]
 version = "0.1.0"
 
 [deps]
-CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 EasyFit = "fde71243-0cda-4261-b7c7-4845bd106b21"
 GivEmExel = "dcf505f5-2bf4-45cb-8fef-5f56a3c0e7fc"
