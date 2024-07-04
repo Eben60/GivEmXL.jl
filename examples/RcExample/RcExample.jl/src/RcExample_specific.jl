@@ -10,44 +10,19 @@ function timerange(df0, t1, t2)
     return (; ts, ys)
 end
 
-function nl_lsq_fit(model, u0, xdata, ydata, p)
-    data = (xdata, ydata, p)
-
-    function lossfn!(du, u, data)
-        (xs, ys, p) = data   
-        du .= model.(xs, Ref(u), Ref(p)) .- ys
-        return nothing
-    end
-
-    sol = nothing
-    @suppress_err begin
-        prob = NonlinearLeastSquaresProblem(
-            NonlinearFunction(lossfn!, resid_prototype = similar(ydata)), u0, data)
-        sol = solve(prob)
-    end
-    u = sol.u
-    fit = model.(xdata, Ref(u), Ref(p))
-    return (;sol, fit)
-end
-
-function expmodel(x, u, t₀=0)
-    # y0 = u[1]
-    a = u[1]
-    τ = u[2]
-    return a * exp(-(x-t₀)/τ) # + y0 
+function easyexpfit(ts, ys, t₀ᵢ)
+    ts = ts .- t₀ᵢ
+    fit = fitexp(ts, ys)
+    return (; a=fit.a, τ=fit.b, c=fit.c, Rpears=fit.R, ypred=fit.ypred)
 end
 
 function proc_dataspan(df, t_start, t_stop)
     t_start = t_start |> ustrip
     t_stop = t_stop |> ustrip
     (; ts, ys) = timerange(df, t_start, t_stop);
-    aᵢ = (ys[1])
-    τᵢ = (t_stop - t_start) / 2
-    t₀ᵢ = t_start
-    (;sol, fit) = nl_lsq_fit(expmodel, [aᵢ, τᵢ], ts, ys, t₀ᵢ)
-    a, τ = sol.u
-    pl = plot(ts, [ys, fit]; label = ["experiment" "fit"])
-    return (;a, τ, sol, fit, pl)
+    (; a, τ, c, Rpears, ypred) = easyexpfit(ts, ys, t_start)
+    pl = plot(ts, [ys, ypred]; label = ["experiment" "fit"])
+    return (;a, τ, c, Rpears,  pl)
 end
 
 function readdata(fl)
@@ -89,15 +64,15 @@ function procsubset(i, pm_subset, overview, args...)
     (; area, Vunit, timeunit, Cunit, R, ϵ, no, plot_annotation, comment, t_start, t_stop) = pm_subset
     df = overview.data.df
     rslt = proc_dataspan(df, t_start, t_stop)
-    (;a, τ, sol, pl) = rslt
+    (;a, τ, c, Rpears, pl) = rslt
     finalize_plot!(pl, pm_subset)
-    rs = (;subset=i, no, a, τ, sol, pl, plot_annotation)
+    rs = (;subset=i, no, a, τ, c, Rpears, pl, plot_annotation)
     a *= Vunit
     τ *= timeunit
     c = (τ / R) 
     c = c |> Cunit 
     d = calc_thickness(c, ϵ, area)
-    df_row = (;no, a, τ, c, d, R, ϵ, comment, t_start, t_stop)
+    df_row = (;no, a, τ, c, Rpears, d, R, ϵ, comment, t_start, t_stop)
     return (;rs, df_row)
 end
 

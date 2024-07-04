@@ -2,8 +2,9 @@ module RcExample
 
 using GivEmExel, SimpleArgParse2
 using GivEmExel: combine2df
-using Plots, XLSX, DataFrames, Unitful, NonlinearSolve, Suppressor
+using Plots, XLSX, DataFrames, Unitful
 using Unitful: ϵ0
+using EasyFit: fitexp
 
 include("RcExample_specific.jl")
 
