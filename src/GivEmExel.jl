@@ -1,5 +1,5 @@
 module GivEmExel
-using SimpleArgParse2
+using YAArgParser
 using JuliaInterpreter
 using Unitful, DataFrames, XLSX, Preferences
 using NativeFileDialog: pick_file, pick_multi_file, pick_folder
@@ -17,7 +17,7 @@ include("interact.jl")
 include("SavingResults.jl")
 
 
-using SimpleArgParse2: get_value, getcolor
+using YAArgParser: get_value, getcolor
 
 export complete_interact, proc_n_save, read_xl_paramtables, exper_paramsets
 

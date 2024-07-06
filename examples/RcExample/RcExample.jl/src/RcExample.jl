@@ -1,6 +1,6 @@
 module RcExample
 
-using GivEmExel, SimpleArgParse2
+using GivEmExel, YAArgParser
 using GivEmExel: combine2df
 using Plots, XLSX, DataFrames, Unitful
 using Unitful: ϵ0
