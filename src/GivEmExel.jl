@@ -1,7 +1,7 @@
 module GivEmExel
 
-using YAArgParser
-using YAArgParser: get_value, getcolor
+using YAArguParser
+using YAArguParser: get_value, getcolor
 
 using Unitful, DataFrames, XLSX, Preferences
 using NativeFileDialog: pick_file, pick_multi_file, pick_folder

@@ -1,8 +1,8 @@
 ## API user interaction
 
-The user interaction API is based on the package `YAArgParser` - see docs under *****.
+The user interaction API is based on the package `YAArguParser` - see docs under *****.
 
-The both functions [`proc_ARGS`](@ref GivEmExel.proc_ARGS) and [`prompt_and_parse`](@ref GivEmExel.prompt_and_parse) take an `ArgumentParser` (as defined in [`SimpleArgParse`](https://htmlpreview.github.io/?https://github.com/Eben60/SimpleArgParse.jl/blob/maindev/docs/build/index.html) ); they can also be passed `Nothing` - in this case the corresponding step will be skipped. Please see in our [Toy Example](@ref "Toy Example: Fit exp decay curves") for how to implement the user interaction in a typical case.
+The both functions [`proc_ARGS`](@ref GivEmExel.proc_ARGS) and [`prompt_and_parse`](@ref GivEmExel.prompt_and_parse) take an `ArgumentParser` (as defined in [``](https://htmlpreview.github.io/?https://github.com/Eben60/SimpleArgParse.jl/blob/maindev/docs/build/index.html) ); they can also be passed `Nothing` - in this case the corresponding step will be skipped. Please see in our [Toy Example](@ref "Toy Example: Fit exp decay curves") for how to implement the user interaction in a typical case.
 
 ### Flow chart - overview 
 

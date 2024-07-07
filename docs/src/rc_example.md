@@ -6,7 +6,7 @@ We plot an overview plot of the data as well as plots of each span. The span sta
 
 ### User interaction
 
-The user runs from from a terminal window a batch script `rcex.sh` / `rcex.bat` (invoking `rcex.jl`), to which he can optionally provide parameter `-p` / `--plotformat`, `-e` / `--throwonerr`, and `-h` / `--help`. These options are defined through the variable `pp0::SimpleArgParse.ArgumentParser` which is initialized in the file `init_cli_options.jl`. The user will be asked to point to "his" excel file with the parameters and data, and a GUI dialog opens. There are three excel files provided in the folder `data/` of the example package. You may try it first with the file `RcExampleData.xlsx`.
+The user runs from from a terminal window a batch script `rcex.sh` / `rcex.bat` (invoking `rcex.jl`), to which he can optionally provide parameter `-p` / `--plotformat`, `-e` / `--throwonerr`, and `-h` / `--help`. These options are defined through the variable `pp0::YAArguParser.ArgumentParser` which is initialized in the file `init_cli_options.jl`. The user will be asked to point to "his" excel file with the parameters and data, and a GUI dialog opens. There are three excel files provided in the folder `data/` of the example package. You may try it first with the file `RcExampleData.xlsx`.
 
 Upon processing and saving the results, a corresponding message is printed, and either next file can be selected, or processing finished by typing `-a` / `--abort`. These interactions are defined by the variable `pps`, which is a `NamedTuple` of `ArgumentParser`s.
 
