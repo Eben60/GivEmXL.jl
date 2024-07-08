@@ -1,15 +1,24 @@
-function copy_proj(src_folder, tgt_folder, proj_name, td; force)
-    cp_folder = joinpath(tgt_folder, proj_name)
+function copy_proj(src_folder, tgt_folder, old_proj_name, td; force, new_proj_name=nothing)
+    cp_folder = joinpath(tgt_folder, old_proj_name)
+
+    if force
+        oldnewfolder = joinpath(tgt_folder, new_proj_name)
+        isdir(oldnewfolder) && rm(oldnewfolder; recursive=true)
+    end
 
     cp(src_folder, cp_folder; force)
 
-    proj_dir = joinpath(cp_folder, (proj_name * ".jl"))
+    proj_dir = joinpath(cp_folder, (old_proj_name * ".jl"))
     proj_toml = joinpath(proj_dir, "Project.toml")
     @assert isfile(proj_toml)
 
     open(proj_toml, "w") do io
         TOML.print(io, td)
     end
+
+    mnf_toml = joinpath(proj_dir, "Manifest.toml")
+    isfile(mnf_toml) && rm(mnf_toml)
+
     return nothing
 end
 
@@ -42,7 +51,7 @@ function list_files_with_prefix(root_dir, prefix)
 end
 
 
-function makeproj(tgt_folder, tgt_proj, tgt_script; authors::Vector{String}=String[], src_folder=nothing, src_script=nothing, force=false)
+function makeproj(tgt_folder, new_proj_name, tgt_script; authors::Vector{String}=String[], src_folder=nothing, src_script=nothing, force=false)
     @assert isdir(tgt_folder)
 
     if isnothing(src_folder) 
@@ -52,32 +61,36 @@ function makeproj(tgt_folder, tgt_proj, tgt_script; authors::Vector{String}=Stri
     @assert isdir(src_folder)
 
     src_proj = basename(src_folder)
-    src_proj_toml = joinpath(src_folder, (src_proj*".jl"), "Project.toml")
+    src_proj_toml = joinpath(src_folder, (src_proj * ".jl"), "Project.toml")
     @assert isfile(src_proj_toml)
 
     td = TOML.parsefile(src_proj_toml)
     # td0 = deepcopy(td)
 
-    proj_name = td["name"]
-    @assert uppercase(src_proj) == uppercase(proj_name)
+    old_proj_name = td["name"]
+    @assert uppercase(src_proj) == uppercase(old_proj_name)
 
-    td["name"] = tgt_proj
+    td["name"] = new_proj_name
     td["uuid"] = string(UUIDs.uuid4())
     td["authors"] = authors
 
-    copy_proj(src_folder, tgt_folder, proj_name, td; force)
+    copy_proj(src_folder, tgt_folder, old_proj_name, td; force, new_proj_name)
 
-    fls = list_files_with_prefix(tgt_folder, proj_name)
+    fls = list_files_with_prefix(tgt_folder, old_proj_name)
 
     for f in fls.files
-        rename_file(f, proj_name, tgt_proj)
+        rename_file(f, old_proj_name, new_proj_name)
     end
 
     dirs = sort(fls.dirs; by=(x -> length(splitpath(x))), rev=true) # start renaming from the most nested dirs
     for f in dirs
-        rename_file(f, proj_name, tgt_proj)
+        rename_file(f, old_proj_name, new_proj_name)
     end
 
+    bashdir = joinpath(tgt_folder, new_proj_name)
+    @assert isdir(bashdir)
+    projdir = joinpath(bashdir, (new_proj_name * ".jl"))
+    @assert isdir(projdir)
 
     return (;td, fls) #, td0)
 end
