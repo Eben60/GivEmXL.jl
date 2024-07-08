@@ -22,6 +22,19 @@ function copy_proj(src_folder, tgt_folder, old_proj_name, td; force, new_proj_na
     return nothing
 end
 
+function repl_in_files(f, old_substring, new_substring)
+
+    content = read(f, String)
+
+    modified_content = replace(content, old_substring => new_substring)
+    
+    open(f, "w") do file
+        write(file, modified_content)
+    end
+    return nothing
+end
+export repl_in_files
+
 function rename_file(f, oldprefix, newprefix)
     dir = dirname(f)
     fname = basename(f)
@@ -30,28 +43,57 @@ function rename_file(f, oldprefix, newprefix)
     newpath = joinpath(dir, newname)
     mv(f, newpath)
 end
-export rename_file
 
-function list_files_with_prefix(root_dir, prefix)
+function hassuffix(fname, suffixes)
+    for s in suffixes
+        endswith(lowercase(fname), lowercase(s)) && return true
+    end
+    return false
+end
+
+function list_files_with_suffixes(root_dir, suffixes=[".jl", ".bat", ".sh"])
     files = String[]
-    dirs = String[]
-    for (root, dirnames, filenames) in walkdir(root_dir)
+    for (root, _, filenames) in walkdir(root_dir)
         for filename in filenames
-            if startswith(filename, prefix)
+            if hassuffix(filename, suffixes)
                 push!(files, joinpath(root, filename))
             end
         end
+    end
+    return files
+end
+
+function matchname(fname, prefix; ignorecase=true, exact=false)
+    if ignorecase 
+        fname = lowercase(fname)
+        prefix = lowercase(prefix)
+    end
+
+    startswith(fname, prefix) || return false
+    ! exact && return true
+
+    return splitext(fname)[1]==prefix
+end
+
+function files_starting_with(root_dir, prefix; ignorecase=true, exact=false)
+    files = String[]
+    dirs = String[]
+
+    for (root, dirnames, filenames) in walkdir(root_dir)
+        for filename in filenames
+            matchname(filename, prefix; ignorecase, exact) && push!(files, joinpath(root, filename))
+        end
         for dirname in dirnames
-            if startswith(dirname, prefix)
-                push!(dirs, joinpath(root, dirname))
-            end
+            matchname(dirname, prefix; ignorecase, exact) && push!(dirs, joinpath(root, dirname))
         end
     end
+
     return (;files, dirs)
 end
 
+function makeproj(tgt_folder, new_proj_name, tgt_script; 
+    ignorecase=true, authors::Vector{String}=String[], src_folder=nothing, src_script=nothing, force=false)
 
-function makeproj(tgt_folder, new_proj_name, tgt_script; authors::Vector{String}=String[], src_folder=nothing, src_script=nothing, force=false)
     @assert isdir(tgt_folder)
 
     if isnothing(src_folder) 
@@ -76,7 +118,7 @@ function makeproj(tgt_folder, new_proj_name, tgt_script; authors::Vector{String}
 
     copy_proj(src_folder, tgt_folder, old_proj_name, td; force, new_proj_name)
 
-    fls = list_files_with_prefix(tgt_folder, old_proj_name)
+    fls = files_starting_with(tgt_folder, old_proj_name; ignorecase)
 
     for f in fls.files
         rename_file(f, old_proj_name, new_proj_name)
@@ -91,7 +133,17 @@ function makeproj(tgt_folder, new_proj_name, tgt_script; authors::Vector{String}
     @assert isdir(bashdir)
     projdir = joinpath(bashdir, (new_proj_name * ".jl"))
     @assert isdir(projdir)
+    srcfls = list_files_with_suffixes(bashdir)
 
-    return (;td, fls) #, td0)
+    for f in srcfls
+        repl_in_files(f, old_proj_name, new_proj_name)
+        repl_in_files(f, src_script, tgt_script)
+    end
+
+    for f in files_starting_with(tgt_folder, src_script; ignorecase=true, exact=true).files
+        rename_file(f, src_script, tgt_script)
+    end
+
+    return (;td, fls, srcfls) #, td0)
 end
 

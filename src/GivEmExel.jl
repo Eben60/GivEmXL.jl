@@ -6,7 +6,8 @@ using YAArguParser: get_value, getcolor
 using Unitful, DataFrames, XLSX, Preferences
 using NativeFileDialog: pick_file, pick_multi_file, pick_folder
 using JuliaInterpreter, PrecompileTools, Compat
-using TOML, UUIDs
+using TOML
+using UUIDs
 
 
 isplot(::Any) = false
