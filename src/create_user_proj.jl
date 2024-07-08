@@ -1,14 +1,15 @@
-function copy_proj(src_folder, tgt_folder, old_proj_name, td; force, new_proj_name=nothing)
-    cp_folder = joinpath(tgt_folder, old_proj_name)
+
+function copy_proj(src_folder, tgt_folder, src_projname, td; force=false, tgt_projname=nothing)
+    cp_folder = joinpath(tgt_folder, src_projname)
 
     if force
-        oldnewfolder = joinpath(tgt_folder, new_proj_name)
+        oldnewfolder = joinpath(tgt_folder, tgt_projname)
         isdir(oldnewfolder) && rm(oldnewfolder; recursive=true)
     end
 
     cp(src_folder, cp_folder; force)
 
-    proj_dir = joinpath(cp_folder, (old_proj_name * ".jl"))
+    proj_dir = joinpath(cp_folder, (src_projname * ".jl"))
     proj_toml = joinpath(proj_dir, "Project.toml")
     @assert isfile(proj_toml)
 
@@ -22,11 +23,11 @@ function copy_proj(src_folder, tgt_folder, old_proj_name, td; force, new_proj_na
     return nothing
 end
 
-function repl_in_files(f, old_substring, new_substring)
+function repl_in_files(f, oldnew_ps)
 
     content = read(f, String)
 
-    modified_content = replace(content, old_substring => new_substring)
+    modified_content = replace(content, oldnew_ps...)
     
     open(f, "w") do file
         write(file, modified_content)
@@ -91,8 +92,8 @@ function files_starting_with(root_dir, prefix; ignorecase=true, exact=false)
     return (;files, dirs)
 end
 
-function makeproj(tgt_folder, new_proj_name, tgt_script; 
-    ignorecase=true, authors::Vector{String}=String[], src_folder=nothing, src_script=nothing, force=false)
+function makeproj(tgt_folder, tgt_projname, tgt_scriptname; 
+    ignorecase=true, authors::Vector{String}=String[], src_folder=nothing, src_scriptname=nothing, force=false)
 
     @assert isdir(tgt_folder)
 
@@ -102,46 +103,45 @@ function makeproj(tgt_folder, new_proj_name, tgt_script;
 
     @assert isdir(src_folder)
 
-    src_proj = basename(src_folder)
-    src_proj_toml = joinpath(src_folder, (src_proj * ".jl"), "Project.toml")
+    src_proj_foldername = basename(src_folder)
+    src_proj_toml = joinpath(src_folder, (src_proj_foldername * ".jl"), "Project.toml")
     @assert isfile(src_proj_toml)
 
     td = TOML.parsefile(src_proj_toml)
     # td0 = deepcopy(td)
 
-    old_proj_name = td["name"]
-    @assert uppercase(src_proj) == uppercase(old_proj_name)
+    src_projname = td["name"]
+    @assert uppercase(src_proj_foldername) == uppercase(src_projname)
 
-    td["name"] = new_proj_name
+    td["name"] = tgt_projname
     td["uuid"] = string(UUIDs.uuid4())
     td["authors"] = authors
 
-    copy_proj(src_folder, tgt_folder, old_proj_name, td; force, new_proj_name)
+    copy_proj(src_folder, tgt_folder, src_projname, td; force, tgt_projname)
 
-    fls = files_starting_with(tgt_folder, old_proj_name; ignorecase)
+    fls = files_starting_with(tgt_folder, src_projname; ignorecase)
 
     for f in fls.files
-        rename_file(f, old_proj_name, new_proj_name)
+        rename_file(f, src_projname, tgt_projname)
     end
 
     dirs = sort(fls.dirs; by=(x -> length(splitpath(x))), rev=true) # start renaming from the most nested dirs
     for f in dirs
-        rename_file(f, old_proj_name, new_proj_name)
+        rename_file(f, src_projname, tgt_projname)
     end
 
-    bashdir = joinpath(tgt_folder, new_proj_name)
+    bashdir = joinpath(tgt_folder, tgt_projname)
     @assert isdir(bashdir)
-    projdir = joinpath(bashdir, (new_proj_name * ".jl"))
+    projdir = joinpath(bashdir, (tgt_projname * ".jl"))
     @assert isdir(projdir)
     srcfls = list_files_with_suffixes(bashdir)
 
     for f in srcfls
-        repl_in_files(f, old_proj_name, new_proj_name)
-        repl_in_files(f, src_script, tgt_script)
+        repl_in_files(f, [src_projname=>tgt_projname, src_scriptname=>tgt_scriptname])
     end
 
-    for f in files_starting_with(tgt_folder, src_script; ignorecase=true, exact=true).files
-        rename_file(f, src_script, tgt_script)
+    for f in files_starting_with(tgt_folder, src_scriptname; ignorecase=true, exact=true).files
+        rename_file(f, src_scriptname, tgt_scriptname)
     end
 
     return (;td, fls, srcfls) #, td0)
