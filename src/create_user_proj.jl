@@ -1,5 +1,4 @@
-
-function copy_proj(src_folder, tgt_folder, src_projname, td; force=false, tgt_projname=nothing)
+function copy_proj(src_folder, tgt_folder, src_projname, proj_tomldict; force=false, tgt_projname=nothing)
     cp_folder = joinpath(tgt_folder, src_projname)
 
     if force
@@ -14,13 +13,27 @@ function copy_proj(src_folder, tgt_folder, src_projname, td; force=false, tgt_pr
     @assert isfile(proj_toml)
 
     open(proj_toml, "w") do io
-        TOML.print(io, td)
+        TOML.print(io, proj_tomldict)
     end
 
     mnf_toml = joinpath(proj_dir, "Manifest.toml")
     isfile(mnf_toml) && rm(mnf_toml)
 
     return nothing
+end
+
+function proj_toml(src_projfolder, tgt_projname, authors)
+    src_proj_toml = joinpath(src_projfolder, "Project.toml")
+    @assert isfile(src_proj_toml)
+
+    proj_tomldict = TOML.parsefile(src_proj_toml)
+
+    src_projname = proj_tomldict["name"]
+
+    proj_tomldict["name"] = tgt_projname
+    proj_tomldict["uuid"] = string(UUIDs.uuid4())
+    proj_tomldict["authors"] = authors
+    return (; proj_tomldict, src_projname)
 end
 
 function repl_in_files(f, oldnew_ps)
@@ -92,33 +105,29 @@ function files_starting_with(root_dir, prefix; ignorecase=true, exact=false)
     return (;files, dirs)
 end
 
-function makeproj(tgt_folder, tgt_projname, tgt_scriptname; 
-    ignorecase=true, authors::Vector{String}=String[], src_folder=nothing, src_scriptname=nothing, force=false)
 
+function getsource(tgt_folder, src_folder, src_scriptname)
     @assert isdir(tgt_folder)
 
     if isnothing(src_folder) 
-        error("define source!")
+        src_folder = joinpath(dirname(@__DIR__), "userproj_template", "Template_ProjName")
+    end
+
+    if isnothing(src_scriptname)
+        src_scriptname = "template_user_scriptname"
     end
 
     @assert isdir(src_folder)
 
     src_proj_foldername = basename(src_folder)
-    src_proj_toml = joinpath(src_folder, (src_proj_foldername * ".jl"), "Project.toml")
-    @assert isfile(src_proj_toml)
+    src_projfolder = joinpath(src_folder, (src_proj_foldername * ".jl"))
 
-    td = TOML.parsefile(src_proj_toml)
-    # td0 = deepcopy(td)
+    @assert isfile(joinpath(src_projfolder, "src", (src_scriptname * ".jl")))
 
-    src_projname = td["name"]
-    @assert uppercase(src_proj_foldername) == uppercase(src_projname)
+    return (; src_folder, src_scriptname, src_projfolder, src_proj_foldername)
+end
 
-    td["name"] = tgt_projname
-    td["uuid"] = string(UUIDs.uuid4())
-    td["authors"] = authors
-
-    copy_proj(src_folder, tgt_folder, src_projname, td; force, tgt_projname)
-
+function replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptname, tgt_scriptname, ignorecase)
     fls = files_starting_with(tgt_folder, src_projname; ignorecase)
 
     for f in fls.files
@@ -134,16 +143,28 @@ function makeproj(tgt_folder, tgt_projname, tgt_scriptname;
     @assert isdir(bashdir)
     projdir = joinpath(bashdir, (tgt_projname * ".jl"))
     @assert isdir(projdir)
-    srcfls = list_files_with_suffixes(bashdir)
 
-    for f in srcfls
+    for f in list_files_with_suffixes(bashdir)
         repl_in_files(f, [src_projname=>tgt_projname, src_scriptname=>tgt_scriptname])
     end
 
     for f in files_starting_with(tgt_folder, src_scriptname; ignorecase=true, exact=true).files
         rename_file(f, src_scriptname, tgt_scriptname)
     end
+end
 
-    return (;td, fls, srcfls) #, td0)
+function makeproj(tgt_folder, tgt_projname, tgt_scriptname; 
+    ignorecase=true, authors::Vector{String}=String[], src_folder=nothing, src_scriptname=nothing, force=false)
+
+    (; src_folder, src_scriptname, src_projfolder, src_proj_foldername) = getsource(tgt_folder, src_folder, src_scriptname)
+
+    (;proj_tomldict, src_projname)= proj_toml(src_projfolder, tgt_projname, authors)
+    @assert uppercase(src_proj_foldername) == uppercase(src_projname)
+
+    copy_proj(src_folder, tgt_folder, src_projname, proj_tomldict; force, tgt_projname)
+
+    replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptname, tgt_scriptname, ignorecase)
+
+    return nothing 
 end
 
