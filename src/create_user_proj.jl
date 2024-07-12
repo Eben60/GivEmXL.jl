@@ -153,8 +153,54 @@ function replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptna
     end
 end
 
-function makeproj(tgt_folder, tgt_projname, tgt_scriptname; 
-    ignorecase=true, authors::Vector{String}=String[], src_folder=nothing, src_scriptname=nothing, force=false)
+
+"""
+    makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::NamedTuple; 
+        ignorecase=false, authors::Vector{String}=String[], force=false) → nothing
+    makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Nothing=nothing; kwargs...)
+    makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol; kwargs...)
+
+Create a project by copying a template project and performing renamings as necessary.
+
+# Arguments
+- `tgt_folder::AbstractString`: Target folder
+- `tgt_projname::AbstractString`: The name of the project to be created
+- `tgt_scriptname::AbstractString`: The name of the executable script
+- `src::Nothing=nothing`: Source project, defaults to the template supplied with `GivEmExel`
+- `src::Symbol`: Accepts either `:template` (the default template), of `:example1`, 
+    which is the Toy Example provided with `GivEmExel`
+- `src::@NamedTuple{src_folder::String, src_scriptname::String}`: E.g. it would be 
+    `src=(;src_folder"userproj_template/Template_ProjName", src_scriptname="template_user_scriptname")` for the default template
+
+# Keyword arguments
+- `ignorecase=false`: Ignore case in the file paths
+- `authors::Vector{String}=String[]`: The project authors (goes to `Project.toml`)
+- `force=false`: If true, will overwrite the destination.
+
+Function `makeproj` is public, not exported.
+"""
+makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Nothing=nothing; kwargs...) = 
+    makeproj(tgt_folder, tgt_projname, tgt_scriptname, :template; kwargs...)
+
+function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol; kwargs...) 
+    proj_dir = dirname(@__DIR__) 
+    if src == :template
+        src_folder=(joinpath(proj_dir, "userproj_template/Template_ProjName"))
+        src_scriptname="template_user_scriptname"
+    elseif src == :example1
+        src_folder=(joinpath(proj_dir, "examples/RcExample"))
+        src_scriptname="rcex"
+    else
+        error("Source :$src not implemented")
+    end
+
+    return makeproj(tgt_folder, tgt_projname, tgt_scriptname, (;src_folder, src_scriptname); kwargs...)
+end
+
+function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::NamedTuple; 
+    ignorecase=false, authors::Vector{String}=String[], force=false)
+
+    (; src_folder, src_scriptname) = src
 
     (; src_folder, src_scriptname, src_projfolder, src_proj_foldername) = getsource(tgt_folder, src_folder, src_scriptname)
 
@@ -167,4 +213,21 @@ function makeproj(tgt_folder, tgt_projname, tgt_scriptname;
 
     return nothing 
 end
+
+
+
+# function makeproj(tgt_folder, tgt_projname, tgt_scriptname; 
+#     ignorecase=true, authors::Vector{String}=String[], src_folder=nothing, src_scriptname=nothing, force=false)
+
+#     (; src_folder, src_scriptname, src_projfolder, src_proj_foldername) = getsource(tgt_folder, src_folder, src_scriptname)
+
+#     (;proj_tomldict, src_projname)= proj_toml(src_projfolder, tgt_projname, authors)
+#     @assert uppercase(src_proj_foldername) == uppercase(src_projname)
+
+#     copy_proj(src_folder, tgt_folder, src_projname, proj_tomldict; force, tgt_projname)
+
+#     replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptname, tgt_scriptname, ignorecase)
+
+#     return nothing 
+# end
 
