@@ -49,13 +49,17 @@ function repl_in_files(f, oldnew_ps)
 end
 export repl_in_files
 
-function rename_file(f, oldprefix, newprefix)
+function rename_file!(f, oldprefix, newprefix)
     dir = dirname(f)
     fname = basename(f)
     @assert startswith(fname, oldprefix)
+
+    oldprefix == newprefix && return nothing
+    
     newname = replace(fname, oldprefix => newprefix)
     newpath = joinpath(dir, newname)
     mv(f, newpath)
+    return nothing
 end
 
 function hassuffix(fname, suffixes)
@@ -131,12 +135,12 @@ function replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptna
     fls = files_starting_with(tgt_folder, src_projname; ignorecase)
 
     for f in fls.files
-        rename_file(f, src_projname, tgt_projname)
+        rename_file!(f, src_projname, tgt_projname)
     end
 
     dirs = sort(fls.dirs; by=(x -> length(splitpath(x))), rev=true) # start renaming from the most nested dirs
     for f in dirs
-        rename_file(f, src_projname, tgt_projname)
+        rename_file!(f, src_projname, tgt_projname)
     end
 
     bashdir = joinpath(tgt_folder, tgt_projname)
@@ -149,7 +153,7 @@ function replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptna
     end
 
     for f in files_starting_with(tgt_folder, src_scriptname; ignorecase=true, exact=true).files
-        rename_file(f, src_scriptname, tgt_scriptname)
+        rename_file!(f, src_scriptname, tgt_scriptname)
     end
 end
 
