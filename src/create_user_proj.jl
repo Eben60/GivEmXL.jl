@@ -174,7 +174,7 @@ Create a project by copying a template project and performing renamings as neces
 - `src::Symbol`: Accepts either `:template` (the default template), of `:example1`, 
     which is the Toy Example provided with `GivEmExel`
 - `src::@NamedTuple{src_folder::String, src_scriptname::String}`: E.g. it would be 
-    `src=(;src_folder"userproj_template/Template_ProjName", src_scriptname="template_user_scriptname")` for the default template
+    `src=(; src_folder="userproj_template/Template_ProjName", src_scriptname="template_user_scriptname")` for the default template
 
 # Keyword arguments
 - `ignorecase=false`: Ignore case in the file paths

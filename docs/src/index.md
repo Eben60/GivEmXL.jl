@@ -4,9 +4,9 @@
 
 Let's assume you are the only `Julia`  user/programmer among your colleagues. Actually the only one who does programming at all – all others mostly use Microsoft® Excel® for their computations, or else some specialized (GUI) software. 
 
-*smallprint - througout the text, "excel file" (no capitalisation) and "XLSX file" will be used interchangeably and denote files in the XLSX format, which can be produced and read by MS Excel as well as other software, e.g. LibreOffice.*
+*smallprint - throughout the text, "excel file" (no capitalisation) and "XLSX file" will be used interchangeably and denote files in the XLSX format, which can be produced and read by MS Excel as well as other software, e.g. LibreOffice.*
 
-Now, you have developed a script for some computation or data analysis which they would be glad to use – but asking them to accept your programmers workflow would be asking too much. Building a full GUI for your script to be used by merely a couple of users would be an expensive overkill. Enter `GivEmExel`: with this package you are able to produce "somewhat interactive" packages for use by your non-programming colleagues.
+Now, you have developed a script for some computation or data analysis which they would be glad to use – but asking them to accept your programmers workflow would be asking too much. Building a full GUI for your script to be used by merely a couple of users would be an time-consuming overkill. Enter `GivEmExel`: with this package you are able to produce "somewhat interactive" packages for use by your non-programming colleagues.
 
 My motivation was actually initially different. I used a Julia script to process experimental data, and for each experiment there were about a dozen or so of experiment-specific parameter plus a dozen of parameters specific for each separate measurement within the experiment. For each measurement, my script produced a further dozen of numbers. Using MS Excel proved to be a practical way to manage the parameter and results and to share them with the colleagues. Then with a bit of additional programming I could also share the script itself and let them process their data on their own: That happened to be a nice side effect.
 
@@ -14,12 +14,12 @@ My motivation was actually initially different. I used a Julia script to process
 
 See the source under [`examples/RcExample`](https://github.com/Eben60/GivEmExel.jl/tree/main/examples/RcExample)
 
-### From the point of view of user
+### From the user's point of view
 
 Your colleague receives from you
 * Instructions for `Julia` installation on their computer
 * An excel template file containing one or two tables
-* A folder to be copied somewhere onto their computer. The folder contains two batch files (`.bat` on Windows an `.sh` on unixes), and some other folder enclosed. One of the batch files is `instantiate.bat` to be run once.
+* A folder (or zip file) to be copied/extracted somewhere onto their computer. The folder contains two batch files (`.bat` on Windows an `.sh` on unixes), and some other folder enclosed. One of the batch files is `instantiate.bat` to be run once.
 
 Let's look into the contents of the Excel files. The first of them is called `param_setup` and contains the default values (here for `area` and `ϵ`) and the units like following:
 
@@ -62,20 +62,20 @@ As soon as the selected file is processed, the results will be put into a folder
 
 Clean your data, rinse, repeat 😁
 
-### From the point of view of developer
+### From the developer's point of view
 
-After, or in the course of, finishing to program what your package is expected to do, define the parameter and units to be communicated to your app. Those can be transferred by way of cli parameter, or through a file in XLSX format. In our toy example the plotting format can be passed as cli parameter, e.g.
+After, or in the course of, finishing to program what your package is expected to do, define the parameter and units to be communicated to your app. Those can be transferred by way of CLI parameter, or through a file in XLSX format. In our toy example the plotting format can be passed as CLI parameter, e.g.
 ```
 $ >  rcex.sh --plotformat PDF
 ```
-whereas for the experiment parameter like `area` and `ϵ`, we use excel. However, in the end the cli input is merged with the excel input and passed to your functions as `kwargs...`
+whereas for the experiment parameters like `area` and `ϵ`, we use excel. However, in the end the CLI input will be merged with the excel input and passed to your functions as `kwargs...`
 
 In our example, the experimental data are in a separate table in the same excel file. We could also let the user to point to a separate file or folder, or conclude to the data file from the name or position of the excel file.
 
-It is assumed that your calculation processes multiple data subsets: In our example there are three segments (three capacitor discharges). For a case of a computation or dataset without subsets, represent it as a case with one subset. We divide our processing into three separate functions: Preprocessing / processing each subset / postprocessing. In our toy example these functions are: `preproc`, `procsubset`, `postproc`. You can however skip some steps if you don't need them. In our toy example you can uncomment the line 
+It is assumed that your calculation processes multiple data subsets: In our example there are three segments (three capacitor discharges). For a case of a computation or dataset without subsets, you can represent it as a case with one subset. We divide our processing into three separate functions: Preprocessing / processing each subset / postprocessing. In our toy example these functions are: `preproc`, `procsubset`, `postproc`. You can however skip some steps if you don't need them. In our toy example you can uncomment the line 
 ```
 # postproc = nothing 
 ```
-just with the effect that no useless summary will now be produced. Our functions are expected to return dataframes or dataframe rows, and plot objects. In our example, we use `Plots.jl`. `Makie.jl` is also supported out of the box. For other plotting packages, you will need to add a few code lines.
+just with the effect that no summary will now be produced. Our functions are expected to return dataframes or dataframe rows, and plot objects. In our example, we use `Plots.jl`. `Makie.jl` is also supported out of the box. For other plotting packages, you will need to add a few code lines.
 
 The returned dataframes will be saved as an excel file with multiple tables, the plots saved in the selected format. Voilà!
