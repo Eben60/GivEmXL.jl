@@ -161,7 +161,6 @@ end
 """
     makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::NamedTuple; 
         ignorecase=false, authors::Vector{String}=String[], force=false) → nothing
-    # makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Nothing=nothing; kwargs...)
     makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol; kwargs...)
 
 Create a project by copying a template project and performing renamings as necessary.
@@ -170,25 +169,22 @@ Create a project by copying a template project and performing renamings as neces
 - `tgt_folder::AbstractString`: Target folder
 - `tgt_projname::AbstractString`: The name of the project to be created
 - `tgt_scriptname::AbstractString`: The name of the executable script
-- `src::Nothing=nothing`: Source project, defaults to the template supplied with `GivEmExel`
-- `src::Symbol`: Accepts either `:template` (the default template), of `:example1`, 
+- `src::Symbol`: Accepts either `:default` (the default template), of `:example1`, 
     which is the Toy Example provided with `GivEmExel`
 - `src::@NamedTuple{src_folder::String, src_scriptname::String}`: E.g. it would be 
-    `src=(; src_folder="userproj_template/Template_ProjName", src_scriptname="template_user_scriptname")` for the default template
+    `src=(; src_folder="userproj_template/Template_ProjName", src_scriptname="template_user_scriptname")` 
+    for the default template
 
 # Keyword arguments
 - `ignorecase=false`: Ignore case in the file paths
-- `authors::Vector{String}=String[]`: The project authors (goes to `Project.toml`)
+- `authors::Vector{T}=String[] where T <: AbstractString`: The project authors (goes to `Project.toml`)
 - `force=false`: If true, will overwrite the destination.
 
 Function `makeproj` is public, not exported.
 """
-# makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Nothing=nothing; kwargs...) = 
-#     makeproj(tgt_folder, tgt_projname, tgt_scriptname, :template; kwargs...)
-
-function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol = :template; kwargs...) 
+function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol = :default; kwargs...) 
     proj_dir = dirname(@__DIR__) 
-    if src == :template
+    if src == :default
         src_folder=(joinpath(proj_dir, "userproj_template/Template_ProjName"))
         src_scriptname="template_user_scriptname"
     elseif src == :example1
@@ -202,7 +198,7 @@ function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol = :templ
 end
 
 function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::NamedTuple; 
-    ignorecase=false, authors::Vector{String}=String[], force=false)
+    ignorecase=false, authors::Vector{T}=String[], force=false) where T <: AbstractString
 
     (; src_folder, src_scriptname) = src
 
