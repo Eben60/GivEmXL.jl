@@ -161,7 +161,7 @@ end
 """
     makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::NamedTuple; 
         ignorecase=false, authors::Vector{String}=String[], force=false) → nothing
-    makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Nothing=nothing; kwargs...)
+    # makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Nothing=nothing; kwargs...)
     makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol; kwargs...)
 
 Create a project by copying a template project and performing renamings as necessary.
@@ -183,10 +183,10 @@ Create a project by copying a template project and performing renamings as neces
 
 Function `makeproj` is public, not exported.
 """
-makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Nothing=nothing; kwargs...) = 
-    makeproj(tgt_folder, tgt_projname, tgt_scriptname, :template; kwargs...)
+# makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Nothing=nothing; kwargs...) = 
+#     makeproj(tgt_folder, tgt_projname, tgt_scriptname, :template; kwargs...)
 
-function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol; kwargs...) 
+function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol = :template; kwargs...) 
     proj_dir = dirname(@__DIR__) 
     if src == :template
         src_folder=(joinpath(proj_dir, "userproj_template/Template_ProjName"))
