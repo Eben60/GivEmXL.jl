@@ -1,4 +1,3 @@
-
 # preferrably you should start Julia with the corresponding project using a batch script
 # to save a second or two on environment switching on start time.
 #
@@ -14,7 +13,5 @@ end
 
 using Template_ProjName
 using GivEmExel
-
-# Macni2020M1 Template_ProjName.jl % julia --project=. src/template_user_scriptname.jl -e --plotformat none
 
 complete_interact(pp0, pps, (preproc, procsubset, postproc); getexel=true, getdata=(; dialogtype = :none))

@@ -4,11 +4,6 @@ authors = ["TemplateAuthor"]
 version = "0.1.0"
 
 [deps]
-Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
-XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 GivEmExel = "dcf505f5-2bf4-45cb-8fef-5f56a3c0e7fc"
-EasyFit = "fde71243-0cda-4261-b7c7-4845bd106b21"
 YAArguParser = "bcbd4c87-030e-4da8-a7f0-f342a29caad3"
-DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
-Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"

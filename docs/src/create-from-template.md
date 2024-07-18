@@ -16,6 +16,6 @@ makeproj("/my_projects/MyToyProject/", "MyToyProject", "rcex2", :example1; autho
 
 will create a project based on our [Toy Example](@ref "Toy Example: Fit exp decay curves"). See also [`makeproj` documentation](@ref GivEmExel.makeproj).
 
-### Referring to other in-house `julia` projects in your project.
+### Referring to other in-house `julia` projects in your project
 
-Our aim is to have end user just run `instantiate.bat` once to set up the environment. If your project must refer to some in-house projects, not registered in the General Registry, you can simply copy these projects into a subfolder of your projects. If you generate you project from the default template, as shown above, your project will contain a placeholder for such a dependency. Alternatively you can add dependencies from a file server: for this case, uncomment and adjust the corresponding line in the `instantiate.jl` file. 
+Our aim is that the only thing the end user has to do to set up the environment would be simply running `instantiate.bat` (resp. `instantiate.sh`) once. If your project refers to some in-house projects, not registered in the General Registry, you can simply copy these projects into a subfolder of your projects. In case you generate you project from the default template, as shown above, your project will contain the placeholder for such a dependency in the `instantiate.jl` file. Alternatively you can add dependencies from a (file) server: for this case, uncomment and adjust the corresponding line in `instantiate.jl`. 

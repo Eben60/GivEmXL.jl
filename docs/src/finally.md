@@ -1,6 +1,6 @@
 ## Release Notes
 
-xx.yy.2024 - 
+2024-07-18 - v0.1.0
 
 ## Likes & dislikes?
 

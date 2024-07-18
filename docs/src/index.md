@@ -1,12 +1,23 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Lifecycle:Maturing](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://eben60.github.io/GivEmExel.jl/) 
+[![Build Status](https://github.com/Eben60/GivEmExel.jl/workflows/CI/badge.svg)](https://github.com/Eben60/GivEmExel.jl/actions?query=workflow%3ACI) 
+[![Coverage](https://codecov.io/gh/Eben60/GivEmExel.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Eben60/GivEmExel.jl) 
+[![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl)
+
 # GivEmExel - build your poor man's interactive app
 
 ## Package purpose
 
-Let's assume you are the only `Julia`  user/programmer among your colleagues. Actually the only one who does programming at all – all others mostly use Microsoft® Excel® for their computations, or else some specialized (GUI) software. 
+Let's assume you are the only `Julia`  user/programmer among your colleagues. Maybe the only one who does programming at all – all others mostly use Microsoft® Excel® [^smallprint] for their computations, or else some specialized (GUI) software. 
 
-*smallprint - throughout the text, "excel file" (no capitalisation) and "XLSX file" will be used interchangeably and denote files in the XLSX format, which can be produced and read by MS Excel as well as other software, e.g. LibreOffice.*
+[^smallprint]:
+
+    throughout the text, "excel file" (no capitalisation) and "XLSX file" will be used interchangeably and denote files in the XLSX format, which can be produced and read by MS Excel as well as other software, e.g. LibreOffice.
 
 Now, you have developed a script for some computation or data analysis which they would be glad to use – but asking them to accept your programmers workflow would be asking too much. Building a full GUI for your script to be used by merely a couple of users would be an time-consuming overkill. Enter `GivEmExel`: with this package you are able to produce "somewhat interactive" packages for use by your non-programming colleagues.
+
+## Another package purpose
 
 My motivation was actually initially different. I used a Julia script to process experimental data, and for each experiment there were about a dozen or so of experiment-specific parameter plus a dozen of parameters specific for each separate measurement within the experiment. For each measurement, my script produced a further dozen of numbers. Using MS Excel proved to be a practical way to manage the parameter and results and to share them with the colleagues. Then with a bit of additional programming I could also share the script itself and let them process their data on their own: That happened to be a nice side effect.
 
@@ -72,7 +83,7 @@ whereas for the experiment parameters like `area` and `ϵ`, we use excel. Howeve
 
 In our example, the experimental data are in a separate table in the same excel file. We could also let the user to point to a separate file or folder, or conclude to the data file from the name or position of the excel file.
 
-It is assumed that your calculation processes multiple data subsets: In our example there are three segments (three capacitor discharges). For a case of a computation or dataset without subsets, you can represent it as a case with one subset. We divide our processing into three separate functions: Preprocessing / processing each subset / postprocessing. In our toy example these functions are: `preproc`, `procsubset`, `postproc`. You can however skip some steps if you don't need them. In our toy example you can uncomment the line 
+It is assumed (but not required) that your calculation processes multiple data subsets: In our example there are three segments (three capacitor discharges).  We divide our processing into three separate functions: Preprocessing / processing each subset / postprocessing. In our toy example these functions are: `preproc`, `procsubset`, `postproc`. You can however skip some steps if you don't need them. In our toy example you can uncomment the line 
 ```
 # postproc = nothing 
 ```

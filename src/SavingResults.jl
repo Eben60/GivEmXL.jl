@@ -186,7 +186,7 @@ function proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn, po
 end
 
 """
-    combine2df(subsets_results) → DataFrame
+    combine2df(subsets_results) → Union{DataFrame, Nothing}
 
 Combines `NamedTuple`s (or equivalent) into a dataFrame.
 

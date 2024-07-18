@@ -1,6 +1,8 @@
 ## API data processing
 
-The processing is performed in three steps: preprocessing, processing of each subset in a loop, and postprocessing. Each step can be however skipped. You have to provide the corresponding functions for each of the steps, except skipped ones (you have the free choice in respect to their names). Results of each step are merged with the results of the previous one and passed to the following one. The processing data and saving results is performed by the function [`proc_n_save`](@ref GivEmExel.proc_n_save), which calls the functions [`proc_data`](@ref GivEmExel.proc_data) and [`save_results`](@ref GivEmExel.save_results), respectively. The results are saved into a sub-directory of the excel file folder, and contain plots, the multi-table results file in XLSX format, and, in case of errors, a text file with errors information.
+In a general case your calculation would processes multiple data subsets, wherein the processing is performed in three steps: preprocessing, processing of each subset in a loop, and postprocessing. Each step can be however skipped. Specifically if your data are not divided into subsets, you would put everything into the "preprocessing" function.
+
+You have to provide the corresponding functions for each of the steps, except skipped ones. You have the free choice in respect to the names of these functions. Results of each step are merged with the results of the previous one and passed to the following one. The processing data and saving results is performed by the function [`proc_n_save`](@ref GivEmExel.proc_n_save), which calls the functions [`proc_data`](@ref GivEmExel.proc_data) and [`save_results`](@ref GivEmExel.save_results), respectively. The results are saved into a sub-directory of the excel file folder, and contain plots, the multi-table results file in XLSX format, and, in case of errors, a text file with errors information.
 
 ### Parameter passed to data processing functions
 - `xlfile::String`: path to the exel file (in general case, `Union{Nothing, String}`)
@@ -48,4 +50,33 @@ using Foo # you favorite plotting package
 
 isplot(::Foo.foo_plot) = true
 save_plot(pl::::Foo.foo_plot, fl) = Foo.saveplot(pl, fl)
+```
+
+### Example
+
+All three processing steps:
+
+```
+function my_preproc(args...; kwargs...) 
+    # do the job
+return
+
+function my_proc_subset(args...; kwargs...) 
+    # do the job
+return
+
+function my_postproc(args...; kwargs...) 
+    # do the job
+
+complete_interact(pp0, pps, (my_preproc, my_proc_subset, my_postproc); getexel=true, getdata=(; dialogtype = :none))
+```
+
+One processing step:
+
+```
+function my_proc_everything(args...; kwargs...) 
+    # do the job
+return
+
+complete_interact(pp0, pps, (my_proc_everything, nothing, nothing); getexel=true, getdata=(; dialogtype = :none))
 ```

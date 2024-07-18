@@ -1,4 +1,4 @@
-module AnInHouseProj
+module OurInHouseProj
 
 greet() = print("Hello World!")
 

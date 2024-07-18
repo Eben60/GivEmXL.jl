@@ -1,14 +1,8 @@
 module Template_ProjName
 
 using GivEmExel, YAArguParser
-using GivEmExel: combine2df
-using Plots, XLSX, DataFrames, Unitful
-using Unitful: ϵ0
-using EasyFit: fitexp
 
 include("Template_ProjName_specific.jl")
-
-# postproc = nothing # uncomment this line if you don't want a summary
 
 prompt = "Template_ProjName> "
 promptcolor = "cyan"
