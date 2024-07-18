@@ -3,7 +3,7 @@ using Pkg
 basedir = joinpath(@__DIR__, "..") |> normpath
 Pkg.activate(basedir)
 
-# Pkg.add(; url="https://github.com/Eben60/GivEmExel.jl")
+# Pkg.add(; url="https://github.com/Eben60/GivEmXL.jl")
 
 # Pkg.add(; path="/Server/InHouse_Software/AnotherInHouseProj.jl/")
 

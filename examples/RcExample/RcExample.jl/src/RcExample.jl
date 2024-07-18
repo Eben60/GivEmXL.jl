@@ -1,7 +1,7 @@
 module RcExample
 
-using GivEmExel, YAArguParser
-using GivEmExel: combine2df
+using GivEmXL, YAArguParser
+using GivEmXL: combine2df
 using Plots, XLSX, DataFrames, Unitful
 using Unitful: ϵ0
 using EasyFit: fitexp

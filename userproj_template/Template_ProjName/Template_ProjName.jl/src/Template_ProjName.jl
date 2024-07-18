@@ -1,6 +1,6 @@
 module Template_ProjName
 
-using GivEmExel, YAArguParser
+using GivEmXL, YAArguParser
 
 include("Template_ProjName_specific.jl")
 

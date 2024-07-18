@@ -1,20 +1,20 @@
 ## Creating a project from template
 
 ```
-using GivEmExel: makeproj
+using GivEmXL: makeproj
 
 makeproj("/my_projects/MyProject/", "MyProject", "scrpt"; authors=["1st author", "2nd author"])
 ```
 
-This will create a `GivEmExel` based project from the default template. The project will be named `MyProject` and put into the folder `/my_projects/MyProject/`, with scripts named `scrpt.sh` and `scrpt.bat`, among other things. 
+This will create a `GivEmXL` based project from the default template. The project will be named `MyProject` and put into the folder `/my_projects/MyProject/`, with scripts named `scrpt.sh` and `scrpt.bat`, among other things. 
 
 ```
-using GivEmExel: makeproj
+using GivEmXL: makeproj
 
 makeproj("/my_projects/MyToyProject/", "MyToyProject", "rcex2", :example1; authors=["1st author", "2nd author"])
 ```
 
-will create a project based on our [Toy Example](@ref "Toy Example: Fit exp decay curves"). See also [`makeproj` documentation](@ref GivEmExel.makeproj).
+will create a project based on our [Toy Example](@ref "Toy Example: Fit exp decay curves"). See also [`makeproj` documentation](@ref GivEmXL.makeproj).
 
 ### Referring to other in-house `julia` projects in your project
 

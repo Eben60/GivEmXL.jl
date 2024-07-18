@@ -1,5 +1,5 @@
 using Pkg, Coverage
-Pkg.test("GivEmExel"; coverage=true)
+Pkg.test("GivEmXL"; coverage=true)
 
 srcfolder = normpath(@__DIR__, "../../src")
 coverage = process_folder(srcfolder)

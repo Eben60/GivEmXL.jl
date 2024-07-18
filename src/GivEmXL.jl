@@ -1,4 +1,4 @@
-module GivEmExel
+module GivEmXL
 
 using YAArguParser
 using YAArguParser: get_value, getcolor
@@ -11,7 +11,7 @@ using UUIDs
 
 
 isplot(::Any) = false
-save_plot(p::Any, fl) = Error("Saving plots not implemented for $(typeof(p)). You may want to implement your own method for GivEmExel: save_plot")
+save_plot(p::Any, fl) = Error("Saving plots not implemented for $(typeof(p)). You may want to implement your own method for GivEmXL: save_plot")
 
 include("process_data.jl")
 include("get_files.jl")

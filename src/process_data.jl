@@ -81,7 +81,7 @@ Function `read_units` is internal.
 
 # Examples
 ```julia-repl
-julia> GivEmExel.read_units(df_setup)
+julia> GivEmXL.read_units(df_setup)
 (area = cm², Vunit = mV, timeunit = s, Cunit = nF, R = GΩ, t_start = s, t_stop = s, ϵ = missing)
 
 julia> typeof(ans.timeunit)
@@ -123,7 +123,7 @@ Function `merge_params` is public.
 
 # Examples
 ```julia-repl
-julia> m = GivEmExel.merge_params(df_exp, df_setup, 1);
+julia> m = GivEmXL.merge_params(df_exp, df_setup, 1);
 julia> m.nt
 (area = 0.5 cm², Vunit = mV, timeunit = s, Cunit = nF, R = 5 GΩ, t_start = 1 s, t_stop = 4 s, ϵ = 3.7, no = 1, plot_annotation = "first discharge", comment = "first discharge – 1")
 ```

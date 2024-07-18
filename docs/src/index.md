@@ -1,11 +1,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Lifecycle:Maturing](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)
-[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://eben60.github.io/GivEmExel.jl/) 
-[![Build Status](https://github.com/Eben60/GivEmExel.jl/workflows/CI/badge.svg)](https://github.com/Eben60/GivEmExel.jl/actions?query=workflow%3ACI) 
-[![Coverage](https://codecov.io/gh/Eben60/GivEmExel.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Eben60/GivEmExel.jl) 
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://eben60.github.io/GivEmXL.jl/) 
+[![Build Status](https://github.com/Eben60/GivEmXL.jl/workflows/CI/badge.svg)](https://github.com/Eben60/GivEmXL.jl/actions?query=workflow%3ACI) 
+[![Coverage](https://codecov.io/gh/Eben60/GivEmXL.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Eben60/GivEmXL.jl) 
 [![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl)
 
-# GivEmExel - build your poor man's interactive app
+# GivEmXL - build your poor man's interactive app
 
 ## Package purpose
 
@@ -15,7 +15,7 @@ Let's assume you are the only `Julia`  user/programmer among your colleagues. Ma
 
     throughout the text, "excel file" (no capitalisation) and "XLSX file" will be used interchangeably and denote files in the XLSX format, which can be produced and read by MS Excel as well as other software, e.g. LibreOffice.
 
-Now, you have developed a script for some computation or data analysis which they would be glad to use – but asking them to accept your programmers workflow would be asking too much. Building a full GUI for your script to be used by merely a couple of users would be an time-consuming overkill. Enter `GivEmExel`: with this package you are able to produce "somewhat interactive" packages for use by your non-programming colleagues.
+Now, you have developed a script for some computation or data analysis which they would be glad to use – but asking them to accept your programmers workflow would be asking too much. Building a full GUI for your script to be used by merely a couple of users would be an time-consuming overkill. Enter `GivEmXL`: with this package you are able to produce "somewhat interactive" packages for use by your non-programming colleagues.
 
 ## Another package purpose
 
@@ -23,14 +23,14 @@ My motivation was actually initially different. I used a Julia script to process
 
 ## Toy example - evaluation of capacitor discharge curves
 
-See the source under [`examples/RcExample`](https://github.com/Eben60/GivEmExel.jl/tree/main/examples/RcExample)
+See the source under [`examples/RcExample`](https://github.com/Eben60/GivEmXL.jl/tree/main/examples/RcExample)
 
 ### From the user's point of view
 
 Your colleague receives from you
 * Instructions for `Julia` installation on their computer
 * An excel template file containing one or two tables
-* A folder (or zip file) to be copied/extracted somewhere onto their computer. The folder contains two batch files (`.bat` on Windows an `.sh` on unixes), and some other folder enclosed. One of the batch files is `instantiate.bat` to be run once.
+* A folder (or zip file) to be copied/extracted somewhere onto their computer. The folder contains two batch files (`.bat` on Windows an `.sh` on unixes), and some other folder enclosed. One of the batch files is `instantiate.bat`/`instantiate.sh` to be run once.
 
 Let's look into the contents of the Excel files. The first of them is called `param_setup` and contains the default values (here for `area` and `ϵ`) and the units like following:
 
@@ -61,7 +61,7 @@ RcExample>
 Here a file selection dialog opens for the user to point to the formerly prepared excel file. You select the file, it will be processed, and you will be prompted for the next one:
 
 ```
-Completed processing /Users/eben/Julia/GivEmExel.jl/examples/RcExample/RcExample.jl/data/RcExampleData.xlsx
+Completed processing /Users/eben/Julia/GivEmXL.jl/examples/RcExample/RcExample.jl/data/RcExampleData.xlsx
 press <ENTER> to process next file, of -a<ENTER> to abort 
 RcExample> -a
 eben@Macni2020M1 RcExample % 

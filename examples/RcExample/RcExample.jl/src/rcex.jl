@@ -13,7 +13,7 @@ if isnothing(Pkg.Types.Context().env.pkg) || Pkg.Types.Context().env.pkg.name !=
 end
 
 using RcExample
-using GivEmExel
+using GivEmXL
 
 # Macni2020M1 RcExample.jl % julia --project=. src/rcex.jl -e --plotformat none
 

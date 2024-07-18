@@ -1,15 +1,15 @@
-using GivEmExel
+using GivEmXL
 using Test, Unitful, OrderedCollections, Aqua, DataFrames
 
-using GivEmExel: merge_params, nt_skipmissing, read_units, mergent, s2unit, nt_skipmissing, nt2unitful, mergent, 
+using GivEmXL: merge_params, nt_skipmissing, read_units, mergent, s2unit, nt_skipmissing, nt2unitful, mergent, 
     exper_paramsets, combine2df, out_paths
 
 if !(isdefined(@__MODULE__, :complete_tests) && !complete_tests) 
-    Aqua.Aqua.test_all(GivEmExel; ambiguities = false)
-    @test isempty(Test.detect_ambiguities(GivEmExel))
+    Aqua.Aqua.test_all(GivEmXL; ambiguities = false)
+    @test isempty(Test.detect_ambiguities(GivEmXL))
 end
 
-@testset "GivEmExel" begin
+@testset "GivEmXL" begin
 
 p = joinpath(@__DIR__, "..", "data/testset.xlsx")
 (;df_setup, df_exp) = read_xl_paramtables(p)

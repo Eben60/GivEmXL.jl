@@ -1,7 +1,7 @@
 ## Exported Functions
 
 ```@autodocs
-Modules = [GivEmExel]
+Modules = [GivEmXL]
 Private = false
 Order   = [:function, ]
 ```
@@ -9,7 +9,7 @@ Order   = [:function, ]
 ## Public and Internal Functions
 
 ```@autodocs
-Modules = [GivEmExel]
+Modules = [GivEmXL]
 Public = false
 Order   = [:function, ]
 ```

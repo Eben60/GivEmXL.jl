@@ -1,8 +1,8 @@
 module SavingResultsMakieExt
 
 using Makie
-using GivEmExel
-import GivEmExel: isplot, save_plot
+using GivEmXL
+import GivEmXL: isplot, save_plot
 
 MakiePlot = Union{Makie.Figure, Makie.FigureAxisPlot, Makie.AbstractScene, Makie.AbstractPlot}
 # Makie.AbstractPlot actually not supported for saving by Makie

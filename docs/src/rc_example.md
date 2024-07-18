@@ -19,7 +19,7 @@ We define following functions in the file `RcExample_specific.jl`
 
 ### User invoked script
 
-The `rcex.jl` has just one executable line (apart from the `using` statements). We have already discussed most of the parameters passed to the [`complete_interact`](@ref GivEmExel.complete_interact) function. `getexel=true` and `getdata=(; dialogtype = :none)` tell that there should be a GUI dialog for excel file only.
+The `rcex.jl` has just one executable line (apart from the `using` statements). We have already discussed most of the parameters passed to the [`complete_interact`](@ref GivEmXL.complete_interact) function. `getexel=true` and `getdata=(; dialogtype = :none)` tell that there should be a GUI dialog for excel file only.
 
 ### Error processing
 

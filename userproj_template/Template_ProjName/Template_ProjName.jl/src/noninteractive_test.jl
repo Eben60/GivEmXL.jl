@@ -8,7 +8,7 @@ such a script can be used to develop your package first without the cli dialogs
 module TestNonIntr
 
 using Template_ProjName
-using GivEmExel 
+using GivEmXL 
 
 sourcefolder = normpath(joinpath(@__DIR__, "..", "data"))
 

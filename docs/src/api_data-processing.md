@@ -2,7 +2,7 @@
 
 In a general case your calculation would processes multiple data subsets, wherein the processing is performed in three steps: preprocessing, processing of each subset in a loop, and postprocessing. Each step can be however skipped. Specifically if your data are not divided into subsets, you would put everything into the "preprocessing" function.
 
-You have to provide the corresponding functions for each of the steps, except skipped ones. You have the free choice in respect to the names of these functions. Results of each step are merged with the results of the previous one and passed to the following one. The processing data and saving results is performed by the function [`proc_n_save`](@ref GivEmExel.proc_n_save), which calls the functions [`proc_data`](@ref GivEmExel.proc_data) and [`save_results`](@ref GivEmExel.save_results), respectively. The results are saved into a sub-directory of the excel file folder, and contain plots, the multi-table results file in XLSX format, and, in case of errors, a text file with errors information.
+You have to provide the corresponding functions for each of the steps, except skipped ones. You have the free choice in respect to the names of these functions. Results of each step are merged with the results of the previous one and passed to the following one. The processing data and saving results is performed by the function [`proc_n_save`](@ref GivEmXL.proc_n_save), which calls the functions [`proc_data`](@ref GivEmXL.proc_data) and [`save_results`](@ref GivEmXL.save_results), respectively. The results are saved into a sub-directory of the excel file folder, and contain plots, the multi-table results file in XLSX format, and, in case of errors, a text file with errors information.
 
 ### Parameter passed to data processing functions
 - `xlfile::String`: path to the exel file (in general case, `Union{Nothing, String}`)
@@ -42,10 +42,10 @@ It is expected to return a `NamedTuple` as following `(;plots, :dataframes)` - s
 
 ### Plot objects
 
-If your data processing functions return `Plots` or `Makie` objects, that is supported out of the box. If you use some other package, or maybe want to save some other objects instead of or additionally to the plots, you have to define your own methods for two functions like following (see also package extension files in the `GivEmExel`'s folder `ext/` as an example):
+If your data processing functions return `Plots` or `Makie` objects, that is supported out of the box. If you use some other package, or maybe want to save some other objects instead of or additionally to the plots, you have to define your own methods for two functions like following (see also package extension files in the `GivEmXL`'s folder `ext/` as an example):
 
 ```
-import GivEmExel: isplot, save_plot
+import GivEmXL: isplot, save_plot
 using Foo # you favorite plotting package
 
 isplot(::Foo.foo_plot) = true

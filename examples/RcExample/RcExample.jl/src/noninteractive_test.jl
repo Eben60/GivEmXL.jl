@@ -8,7 +8,7 @@ such a script can be used to develop your package first without the cli dialogs
 module TestRc
 
 using RcExample
-using GivEmExel 
+using GivEmXL 
 
 fl_no = 1
 

@@ -12,6 +12,6 @@ if isnothing(Pkg.Types.Context().env.pkg) || Pkg.Types.Context().env.pkg.name !=
 end
 
 using Template_ProjName
-using GivEmExel
+using GivEmXL
 
 complete_interact(pp0, pps, (preproc, procsubset, postproc); getexel=true, getdata=(; dialogtype = :none))

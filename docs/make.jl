@@ -1,11 +1,11 @@
 using Documenter
-using GivEmExel
+using GivEmXL
 
 makedocs(
-    modules = [GivEmExel],
+    modules = [GivEmXL],
     format = Documenter.HTML(; prettyurls = (get(ENV, "CI", nothing) == "true")),
     authors = "Eben60",
-    sitename = "GivEmExel.jl",
+    sitename = "GivEmXL.jl",
     pages = Any[
         "Introduction" => "index.md", 
         "API data processing" => "api_data-processing.md",
@@ -22,7 +22,7 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/Eben60/GivEmExel.jl.git",
+    repo = "github.com/Eben60/GivEmXL.jl.git",
     versions = nothing,
     push_preview = true
 )

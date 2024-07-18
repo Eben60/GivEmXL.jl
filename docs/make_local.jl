@@ -3,14 +3,14 @@ Pkg.activate(@__DIR__)
 Pkg.develop(path=(joinpath(@__DIR__, "../") |> normpath))
 
 using Documenter
-using GivEmExel
+using GivEmXL
 
 # generate documentation locally. 
 makedocs(
-    modules = [GivEmExel],
+    modules = [GivEmXL],
     format = Documenter.HTML(; prettyurls = (get(ENV, "CI", nothing) == "true")),
     authors = "Eben60",
-    sitename = "GivEmExel.jl",
+    sitename = "GivEmXL.jl",
     pages = Any[
         "Introduction" => "index.md", 
         "API data processing" => "api_data-processing.md",
