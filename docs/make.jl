@@ -11,7 +11,7 @@ makedocs(
         "API data processing" => "api_data-processing.md",
         "API user interaction" => "api_user-interaction.md",
         "Toy Example: Fit exp decay curves" => "rc_example.md",
-        "Creating project from template" => "create-from-template.md"
+        "Creating project from template" => "create-from-template.md",
         "Finally" => "finally.md", 
         "Docstrings" => "docstrings.md"
         ],
