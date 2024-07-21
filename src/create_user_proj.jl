@@ -198,7 +198,7 @@ function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol = :defau
 end
 
 function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::NamedTuple; 
-    ignorecase=false, authors::Vector{T}=String[], force=false) where T <: AbstractString
+    ignorecase=false, authors::Vector{<:AbstractString}=String[], force=false)
 
     (; src_folder, src_scriptname) = src
 
@@ -210,24 +210,6 @@ function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::NamedTuple;
     copy_proj(src_folder, tgt_folder, src_projname, proj_tomldict; force, tgt_projname)
 
     replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptname, tgt_scriptname, ignorecase)
-
+    println("Project $tgt_projname successfully created from template.")
     return nothing 
 end
-
-
-
-# function makeproj(tgt_folder, tgt_projname, tgt_scriptname; 
-#     ignorecase=true, authors::Vector{String}=String[], src_folder=nothing, src_scriptname=nothing, force=false)
-
-#     (; src_folder, src_scriptname, src_projfolder, src_proj_foldername) = getsource(tgt_folder, src_folder, src_scriptname)
-
-#     (;proj_tomldict, src_projname)= proj_toml(src_projfolder, tgt_projname, authors)
-#     @assert uppercase(src_proj_foldername) == uppercase(src_projname)
-
-#     copy_proj(src_folder, tgt_folder, src_projname, proj_tomldict; force, tgt_projname)
-
-#     replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptname, tgt_scriptname, ignorecase)
-
-#     return nothing 
-# end
-
