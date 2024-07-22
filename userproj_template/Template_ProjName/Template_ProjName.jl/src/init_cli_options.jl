@@ -1,5 +1,6 @@
 # Please define your user interaction.
-# Check the toy example for how to do that
+# Check the file "init_cli_options_example.jl" (taken from our Toy example)
+# for how to do that
 
 pp0 = nothing
 
