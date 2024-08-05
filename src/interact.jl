@@ -183,7 +183,7 @@ function complete_interact(pp0, pps, proc_data_fn::Function;
         (;abort, argpairs) = prompt_and_parse(pps.spec_options)
         abort && return nothing 
         userargs = mergent(commonargs, argpairs)
-
+        # @show userargs
         if getexel
             (;abort, ) = prompt_and_parse(pps.exelfile_prompt)
             abort && return nothing 
@@ -196,13 +196,17 @@ function complete_interact(pp0, pps, proc_data_fn::Function;
             paramsets = userargs
         end
 
+        # @show paramsets
+        # exit()
         if getdata.dialogtype != :none
             (;abort, ) = prompt_and_parse(pps.datafiles_prompt)
             (;abort, datafiles) = get_data(;getdata...)          
         end
-        
+        # @show paramsets
+        # @show datafiles
+        # exit()
         proc_data_fn(; xlfile, datafiles, paramsets)
-        
+        exit()
         (;abort, ) = prompt_and_parse(pps.next_file)
         abort && return nothing 
     end

@@ -324,6 +324,7 @@ function proc_n_save(procwhole_fn, procsubset_fn, postproc_fn;
         datafiles=nothing, 
         paramsets = [(;)],
         )
+    # @show datafiles
     throwonerr = get(paramsets[1], :throwonerr, false)
     results = proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn, postproc_fn; throwonerr)
     (; overview, subsets_results, résumé, errors) = results
