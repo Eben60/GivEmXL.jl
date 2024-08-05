@@ -1,7 +1,7 @@
 name = "GivEmXL"
 uuid = "dcf505f5-2bf4-45cb-8fef-5f56a3c0e7fc"
 authors = ["Eben60"]
-version = "0.1.1"
+version = "0.2.0"
 
 [deps]
 Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
