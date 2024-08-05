@@ -25,20 +25,21 @@ function sep_unit(v)
 end
 
 """
-    out_paths(f_src; fakefile=false) 
-        → (;fname, f_src, src_dir, rslt_dir, outf, errf)
+    out_paths(f_src) → (;fname, f_src, src_dir, rslt_dir, outf, errf)
 
-From given source file, generates names and paths used for sources and results.
-If `fakefile` set to `true`, it doesn't have to exits, but it's directory must exist.
+From given source path, generates names and paths used for sources and results.
 
 Function `out_paths` is public, not exported.
 """
-function out_paths(f_src; fakefile=false)
+function out_paths(f_src)
+    if isdir(f_src)
+        src_dir = f_src
+    else
+        f_src isa Vector && (f_src = f_src[1]) # in case multiple source files were selected, taking the first one
+        src_dir, fname = splitdir(f_src)
+    end
 
-    !fakefile && !isfile(f_src) && error("file \"$f_src\" do not exist")
-    src_dir, fname = splitdir(f_src)
     isdir(src_dir) || error("directory \"$src_dir\" do not exist")
-
     fname, _ = splitext(fname)
     rslt_dir = joinpath(src_dir, "$(fname)_rslt")
     mkpath(rslt_dir)
@@ -298,9 +299,10 @@ Calls the functions [`save_dfs`](@ref), [`save_all_plots`](@ref), [`write_errors
 
 Function `save_results` is public, not exported.
 """
-function save_results(results, xlfile, paramsets)
+function save_results(results, xlfile, datafiles, paramsets)
     (; overview, subsets_results, résumé, errors) = results
-    (;fname, f_src, src_dir, rslt_dir, outf, errf) = out_paths(xlfile)
+    pathbase = isnothing(xlfile) ? datafiles : xlfile
+    (;fname, f_src, src_dir, rslt_dir, outf, errf) = out_paths(pathbase)
     dfs = save_dfs(overview, subsets_results, résumé, outf)
     save_all_plots(overview, subsets_results, résumé, rslt_dir, paramsets)
     write_errors(errf, errors)
@@ -324,10 +326,10 @@ function proc_n_save(procwhole_fn, procsubset_fn, postproc_fn;
         datafiles=nothing, 
         paramsets = [(;)],
         )
-    # @show datafiles
+    paramsets isa NamedTuple && (paramsets = [paramsets])
     throwonerr = get(paramsets[1], :throwonerr, false)
     results = proc_data(xlfile, datafiles, paramsets, procwhole_fn, procsubset_fn, postproc_fn; throwonerr)
     (; overview, subsets_results, résumé, errors) = results
-    (;dfs) = save_results(results, xlfile, paramsets)
+    (;dfs) = save_results(results, xlfile, datafiles, paramsets)
     return (; overview, subsets_results, résumé, errors, dfs) 
 end

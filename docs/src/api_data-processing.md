@@ -15,7 +15,7 @@ julia> paramsets[1]
 
 ### Preprocessing
 
-The preprocessing function must take three arguments discussed above, like `fn_preproc(xlfile, datafiles, paramsets)`, and expected to return a NamedTuple as following `(;plots, :dataframes, :data)`:
+The preprocessing function must take three arguments discussed above, like `fn_preproc(xlfile, datafiles, paramsets)`, and expected to return a NamedTuple as following `(;plots, dataframes, data)`:
 - `plots::Union{Nothing, NamedTuple{(:plot_annotation, plots...)}}`: e.g. `(;plot_annotation="overview", ov1=pl1, ov2=pl2)` - here `pl1` and `pl2` are plot objects. The annotation will be a part of the file name(s), and if there are multiple plots, their names (e.g. `pl1`) will be compounded into the file name, too. Each plot will be eventually saved to a separate file.
 - `dataframes::Union{Nothing, NamedTuple{(dataframes...)}}`: e.g. `(; overview_table=df1)`. Each dataframe will be saved into a correspondingly named table of the results file in XLSX format.
 - `data::Any`: The data to be passed to the following processing steps.
