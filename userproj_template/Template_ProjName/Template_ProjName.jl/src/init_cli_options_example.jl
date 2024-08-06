@@ -54,5 +54,7 @@ exelfile_prompt = let
     pp
 end
 
-pps = (;gen_options, spec_options, exelfile_prompt, next_file)
+datafiles_prompt = nothing
+
+pps = (;gen_options, spec_options, exelfile_prompt, datafiles_prompt, next_file)
 
