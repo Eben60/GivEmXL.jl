@@ -196,17 +196,14 @@ function complete_interact(pp0, pps, proc_data_fn::Function;
             paramsets = userargs
         end
 
-        # @show paramsets
-        # exit()
         if getdata.dialogtype != :none
             (;abort, ) = prompt_and_parse(pps.datafiles_prompt)
-            (;abort, datafiles) = get_data(;getdata...)          
+            abort && return nothing 
+            (;abort, datafiles) = get_data(;getdata...)
+            abort && return nothing 
         end
-        # @show paramsets
-        # @show datafiles
-        # exit()
+        
         proc_data_fn(; xlfile, datafiles, paramsets)
-        exit()
         (;abort, ) = prompt_and_parse(pps.next_file)
         abort && return nothing 
     end
