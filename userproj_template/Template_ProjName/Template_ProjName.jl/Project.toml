@@ -1,9 +1,9 @@
 name = "Template_ProjName"
 uuid = "9c814703-04b6-4e73-83f6-53d7bafb1f9b"
 authors = ["TemplateAuthor"]
-version = "0.1.1"
+version = "0.1.0"
 
 [deps]
-PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
 GivEmXL = "dcf505f5-2bf4-45cb-8fef-5f56a3c0e7fc"
+PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
 YAArguParser = "bcbd4c87-030e-4da8-a7f0-f342a29caad3"
