@@ -34,6 +34,7 @@ Function `out_paths` is public, not exported.
 function out_paths(f_src)
     if isdir(f_src)
         src_dir = f_src
+        fname = splitpath(src_dir)[end]
     else
         f_src isa Vector && (f_src = f_src[1]) # in case multiple source files were selected, taking the first one
         src_dir, fname = splitdir(f_src)
