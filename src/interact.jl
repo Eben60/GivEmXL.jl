@@ -112,7 +112,7 @@ Merges `userargs` with the parameter in `df_setup` and in each row of `df_exp`
 
 Function `exper_paramsets` is exported.
 """
-function exper_paramsets(userargs, df_exp, df_setup)
+function exper_paramsets(userargs, df_exp=nothing, df_setup=nothing)
     if isnothing(df_exp) & isnothing(df_setup)
         p_sets = [(;)]
     elseif isnothing(df_exp)
