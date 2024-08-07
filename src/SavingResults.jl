@@ -1,20 +1,6 @@
-function anyfy_col!(df, cname) 
-    df[!, cname] = Vector{Any}(df[!, cname])
-    return nothing
-end
-
-function prepare_xl(df0)
-    df = copy(df0)
-    headers = String[]
-    for nm in names(df)
-        (;colheader, v) = sep_unit(df[!, nm])
-        # (eltype(df[!, nm]) <: AbstractString) || 
-        anyfy_col!(df, nm)
-        push!(headers, colheader)
-        colheader == "" || (df[!, nm] = v)
-    end
-    pushfirst!(df, headers)
-    return df
+function df_has_unitful(df)
+    eltypes = eachcol(df) .|> eltype .|> nonmissingtype
+    return any(eltypes .<: Quantity)
 end
 
 function sep_unit(v)
@@ -22,6 +8,26 @@ function sep_unit(v)
     colheader = v |> eltype |> unit |> string
     v = v .|> ustrip |> Vector{Any}
     (;colheader, v)
+end
+
+function anyfy_col!(df, cname) 
+    df[!, cname] = Vector{Any}(df[!, cname])
+    return nothing
+end
+
+function prepare_xl(df0)
+    df_has_unitful(df0) || return df0
+
+    df = copy(df0)
+    headers = String[]
+    for nm in names(df)
+        (;colheader, v) = sep_unit(df[!, nm])
+        anyfy_col!(df, nm)
+        push!(headers, colheader)
+        colheader == "" || (df[!, nm] = v)
+    end
+    pushfirst!(df, headers)
+    return df
 end
 
 """
@@ -216,7 +222,7 @@ Writes multiple DataFrames into an XLSX file.
 Function `write_xl_tables` is public, not exported.
 """
 function write_xl_tables(fl, nt_dfs; overwrite=true)
-    ps = [string(k)=>v for (k, v) in pairs(nt_dfs)]
+    ps = [string(k) => prepare_xl(v) for (k, v) in pairs(nt_dfs)]
     XLSX.writetable(fl, ps; overwrite)
     return nothing
 end
@@ -244,7 +250,6 @@ function save_dfs(overview, subsets_results, résumé, outf)
     isnothing(résumé_dfs) && (résumé_dfs=(;))
     dfs = merge(overview_dfs, résumé_dfs)
     if !isnothing(subsets_df) 
-        subsets_df = prepare_xl(subsets_df)
         dfs = merge(dfs, (;SubsetsRslt=subsets_df))
     end
 

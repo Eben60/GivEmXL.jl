@@ -3,7 +3,7 @@ module GivEmXL
 using YAArguParser
 using YAArguParser: get_value, getcolor
 
-using Unitful, DataFrames, XLSX, Preferences
+using Unitful, DataFrames, XLSX, Preferences, Missings
 using NativeFileDialog: pick_file, pick_multi_file, pick_folder
 using JuliaInterpreter, PrecompileTools, Compat
 using TOML
