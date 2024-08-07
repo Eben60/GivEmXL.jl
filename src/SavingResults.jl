@@ -4,8 +4,9 @@ function df_has_unitful(df)
 end
 
 function sep_unit(v)
-    (eltype(v) <: Quantity) || return (;colheader = "", v)
-    colheader = v |> eltype |> unit |> string
+    coltype = eltype(v) |> nonmissingtype
+    (coltype <: Quantity) || return (;colheader = "", v)
+    colheader = coltype |> unit |> string
     v = v .|> ustrip |> Vector{Any}
     (;colheader, v)
 end
