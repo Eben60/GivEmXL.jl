@@ -97,6 +97,10 @@ function files_starting_with(root_dir, prefix; ignorecase=true, exact=false)
     files = String[]
     dirs = String[]
 
+    isdir(root_dir) || error("Expected $root_dir to be a folder. It is not")
+    rootdirname = splitpath(root_dir)[end]
+    matchname(rootdirname, prefix; ignorecase, exact) && push!(dirs, root_dir)
+    
     for (root, dirnames, filenames) in walkdir(root_dir)
         for filename in filenames
             matchname(filename, prefix; ignorecase, exact) && push!(files, joinpath(root, filename))
@@ -135,7 +139,8 @@ function getsource(tgt_folder, src_folder, src_scriptname)
 end
 
 function replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptname, tgt_scriptname, ignorecase)
-    fls = files_starting_with(tgt_folder, src_projname; ignorecase)
+    rootdir = joinpath(tgt_folder, src_projname) |> abspath |> normpath
+    fls = files_starting_with(rootdir, src_projname; ignorecase)
 
     for f in fls.files
         rename_file!(f, src_projname, tgt_projname)
@@ -143,7 +148,7 @@ function replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptna
 
     dirs = sort(fls.dirs; by=(x -> length(splitpath(x))), rev=true) # start renaming from the most nested dirs
     for f in dirs
-        rename_file!(f, src_projname, tgt_projname)
+        rename_file!(f, src_projname, tgt_projname) 
     end
 
     bashdir = joinpath(tgt_folder, tgt_projname)
@@ -155,11 +160,12 @@ function replace_n_rename(; tgt_folder, src_projname, tgt_projname, src_scriptna
         repl_in_files(f, [src_projname=>tgt_projname, src_scriptname=>tgt_scriptname])
     end
 
-    for f in files_starting_with(tgt_folder, src_scriptname; ignorecase=true, exact=true).files
+    rootdirnew = joinpath(tgt_folder, tgt_projname) |> abspath |> normpath
+    files2rename = files_starting_with(rootdirnew, src_scriptname; ignorecase=true, exact=true).files
+    for f in files2rename
         rename_file!(f, src_scriptname, tgt_scriptname)
     end
 end
-
 
 """
     makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::NamedTuple; 
