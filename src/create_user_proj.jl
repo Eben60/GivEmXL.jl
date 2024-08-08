@@ -121,12 +121,15 @@ function getsource(tgt_folder, src_folder, src_scriptname)
         src_scriptname = "template_user_scriptname"
     end
 
-    @assert isdir(src_folder)
+    src_folder = src_folder |> abspath |> normpath 
+
+    isdir(src_folder) || error("Expected $src_folder to be a folder. It is not")
 
     src_proj_foldername = basename(src_folder)
     src_projfolder = joinpath(src_folder, (src_proj_foldername * ".jl"))
 
-    @assert isfile(joinpath(src_projfolder, "src", (src_scriptname * ".jl")))
+    scriptfile = joinpath(src_projfolder, "src", (src_scriptname * ".jl"))
+    isfile(scriptfile) || error("Expected $scriptfile to be a file. It is not")
 
     return (; src_folder, src_scriptname, src_projfolder, src_proj_foldername)
 end

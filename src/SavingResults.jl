@@ -329,7 +329,7 @@ For explanation of arguments and returned values see docs on these functions.
 Function `proc_n_save` is exported.
 """
 function proc_n_save(procwhole_fn, procsubset_fn, postproc_fn;
-        xlfile,
+        xlfile=nothing,
         datafiles=nothing, 
         paramsets = [(;)],
         )
