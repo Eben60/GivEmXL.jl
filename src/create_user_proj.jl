@@ -180,8 +180,8 @@ Destination folder must be different from the enclosing folder of the source.
 - `tgt_folder::AbstractString`: Destination folder
 - `tgt_projname::AbstractString`: The name of the project to be created
 - `tgt_scriptname::AbstractString`: The name of the executable script
-- `src::Symbol`: Accepts either `:default` (the default template), of `:example1`, 
-    which is the Toy Example provided with `GivEmXL`
+- `src::Symbol`: Accepts either `:default` (the default template), or `:example1` 
+    for Toy Example #1, or `:example2` for Toy Example #1 provided with `GivEmXL`
 - `src::@NamedTuple{src_folder::String, src_scriptname::String}`: E.g. it would be 
     `src=(; src_folder="userproj_template/Template_ProjName", src_scriptname="template_user_scriptname")` 
     for the default template
@@ -201,6 +201,9 @@ function makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol = :defau
     elseif src == :example1
         src_folder=(joinpath(proj_dir, "examples/RcExample"))
         src_scriptname="rcex"
+    elseif src == :example2
+        src_folder=(joinpath(proj_dir, "examples/NoXLexample"))
+        src_scriptname="csvread"
     else
         error("Source :$src not implemented")
     end
