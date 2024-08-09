@@ -2,7 +2,7 @@
 
 The user interaction API is based on the [`YAArguParser`](https://eben60.github.io/YAArguParser.jl/) package.
 
-The both functions [`proc_ARGS`](@ref GivEmXL.proc_ARGS) and [`prompt_and_parse`](@ref GivEmXL.prompt_and_parse) take an [`ArgumentParser`](https://eben60.github.io/YAArguParser.jl/docstrings/#YAArguParser.ArgumentParser) as an argument; they can also be passed `Nothing` - in this case the corresponding step will be skipped. Please see in our [Toy Example](@ref "Toy Example: Fit exp decay curves") for how to implement the user interaction in a typical case.
+The both functions [`proc_ARGS`](@ref GivEmXL.proc_ARGS) and [`prompt_and_parse`](@ref GivEmXL.prompt_and_parse) take an [`ArgumentParser`](https://eben60.github.io/YAArguParser.jl/docstrings/#YAArguParser.ArgumentParser) as an argument; they can also be passed `Nothing` - in this case the corresponding step will be skipped. Please see in our [Toy Example](@ref "Toy Example #1: Fit exp decay curves") for how to implement the user interaction in a typical case.
 
 ### Flow chart - overview 
 
@@ -35,4 +35,4 @@ Batch scripts do nothing else but execute Julia in the environment you supplied,
 
 ### Any questions?
 
-Please analyze the [Toy Example](@ref "Toy Example: Fit exp decay curves").
+Please analyze the [Toy Examples](@ref "Toy Example #1: Fit exp decay curves").

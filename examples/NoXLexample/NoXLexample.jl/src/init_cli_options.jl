@@ -54,7 +54,7 @@ datafiles_prompt = let
         description="Prompt for data file(s)", 
         add_help=true, 
         color = promptcolor, 
-        introduction="press <ENTER>, then select CSV file.",
+        introduction="press <ENTER>, then select CSV file(s).",
         prompt=prompt,
         )
     pp

@@ -1,5 +1,17 @@
 ## Release Notes
 
+### Release 0.2.1
+
+_2024-08-09_ 
+
+#### New features
+
+- Add documentation for "no excel file" use case
+
+#### Other changes
+
+- Bug found and squashed here and there.
+
 ### Release 0.2.0
 
 _2024-08-07_ 

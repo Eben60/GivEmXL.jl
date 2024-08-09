@@ -2,10 +2,10 @@ using PrecompileTools: @setup_workload, @compile_workload
 
 @setup_workload begin
     # put your workload file into the data folder
-    testfiles = ["Testfile1.xlsx",
+    testfiles = ["Table1.csv",
         ]
     sourcefolder = normpath(joinpath(@__DIR__, "..", "data"))
-    cliargs = (;plotformat="none", throwonerr=false)
+    cliargs = (;throwonerr=false, start=5, lastrow=50)
     d = Base.Filesystem.tempdir()
 
     @compile_workload begin

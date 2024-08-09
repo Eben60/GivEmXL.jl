@@ -116,7 +116,7 @@ end
 """
     merge_params(df_exp::Union{Nothing, DataFrame}, df_setup::Union{Nothing, DataFrame}, row::Integer) → (;nt, nt_exp, nt_setup, nt_unitless)
 
-Merges default parameters and units from df_setup with the parameter in the given row of df_exp, and returns them as NamedTuple of NamedTuples. 
+Merges default parameters and units from `df_setup` with the parameter in the given row of `df_exp`, and returns them as NamedTuple of NamedTuples. 
 Actually only the `nt` field of the returned value is used.
 
 Function `merge_params` is public.
