@@ -174,9 +174,10 @@ end
     makeproj(tgt_folder, tgt_projname, tgt_scriptname, src::Symbol; kwargs...)
 
 Create a project by copying a template project and performing renamings as necessary.
+Destination folder must be different from the enclosing folder of the source.
 
 # Arguments
-- `tgt_folder::AbstractString`: Target folder
+- `tgt_folder::AbstractString`: Destination folder
 - `tgt_projname::AbstractString`: The name of the project to be created
 - `tgt_scriptname::AbstractString`: The name of the executable script
 - `src::Symbol`: Accepts either `:default` (the default template), of `:example1`, 
