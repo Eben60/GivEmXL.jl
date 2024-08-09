@@ -1,5 +1,6 @@
 function copy_proj(src_folder, tgt_folder, src_projname, proj_tomldict; force=false, tgt_projname=nothing)
     cp_folder = joinpath(tgt_folder, src_projname)
+    normpath(abspath(cp_folder)) == normpath(abspath(src_folder)) && error("Destination folder must be different from the enclosing folder of the source. \n As a workaround, create a subfolder in $tgt_folder and use as new destination. Sorry for inconvinience")
 
     if force
         oldnewfolder = joinpath(tgt_folder, tgt_projname)
