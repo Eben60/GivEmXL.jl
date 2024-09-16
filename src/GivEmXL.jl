@@ -21,7 +21,7 @@ include("create_user_proj.jl")
 
 export complete_interact, exper_paramsets, proc_n_save, read_xl_paramtables
 
-@compat public combine2df, get_data, get_xl, makeproj, merge_params, out_paths, parse_cl_string, proc_ARGS 
+@compat public combine2df, get_data, get_xl, makeproj, merge_params, out_paths, parse_cl_string, proc_ARGS, 
     proc_data, prompt_and_parse, save_all_plots, save_dfs, save_results, saveplots, write_errors, write_xl_tables,
     
 
