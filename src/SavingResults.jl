@@ -4,6 +4,7 @@ function df_has_unitful(df)
 end
 
 function sep_unit(v)
+    eltype(v) == Missing && return (;colheader="", v)
     coltype = eltype(v) |> nonmissingtype
     (coltype <: Quantity) || return (;colheader = "", v)
     colheader = coltype |> unit |> string
