@@ -1,5 +1,9 @@
 ## Release Notes
 
+### Release 0.2.2..0.2.5
+
+Some fixes. Added package docstring.
+
 ### Release 0.2.1
 
 _2024-08-09_ 
