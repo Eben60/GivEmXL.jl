@@ -1,6 +1,6 @@
 ## Release Notes
 
-### Release 0.2.2..0.2.5
+### Release 0.2.2..0.2.7
 
 Some fixes. Added package docstring.
 
