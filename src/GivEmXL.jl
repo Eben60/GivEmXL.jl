@@ -1,10 +1,11 @@
 """
-Package GivEmXL v$(pkgversion(GivEmXL))
+    Package GivEmXL v$(pkgversion(GivEmXL))
 
 This package helps you in creating redistributable Julia packages for "somewhat interactive" use, 
 which optionally use files in Excel format for data input and output. 
 
 Docs under https://eben60.github.io/GivEmXL.jl/
+$(isnothing(get(ENV, "CI", nothing)) ? ("\n" * "Package local path: " * pathof(GivEmXL)) : "")
 """
 module GivEmXL
 
