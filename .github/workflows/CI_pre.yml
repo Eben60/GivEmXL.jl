@@ -1,13 +1,8 @@
-name: CI
+name: CI_pre
 on:
-  push:
-    # branches:
-    #   - main
-    tags: ['*']
-  pull_request:
   workflow_dispatch:
   schedule:
-    - cron: '37 5 18 * *'
+    - cron: '0 0 17 * *'
 concurrency:
   # Skip intermediate builds: always.
   # Cancel intermediate builds: only if it is a pull request build.
@@ -18,14 +13,14 @@ jobs:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: false 
       matrix:
         version:
-          - 'lts'
-          - '1' # automatically expands to the latest stable 1.x release of Julia
+          - 'pre'
         os:
           - ubuntu-latest
           - windows-latest
+          - macOS-latest
 
     steps:
       - uses: actions/checkout@v6
@@ -35,10 +30,3 @@ jobs:
       - uses: julia-actions/cache@v3
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
-      - uses: julia-actions/julia-processcoverage@v1
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v6
-        with:
-          files: lcov.info
-          token: ${{ secrets.CODECOV_TOKEN }}
-          
