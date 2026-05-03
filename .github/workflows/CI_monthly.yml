@@ -1,5 +1,7 @@
-name: CI_pre
+name: CI_monthly
 on:
+  push:
+    tags: ['*']
   workflow_dispatch:
   schedule:
     - cron: '0 0 17 * *'
@@ -16,6 +18,8 @@ jobs:
       fail-fast: false 
       matrix:
         version:
+          - 'lts'
+          - '1'
           - 'pre'
         os:
           - ubuntu-latest
