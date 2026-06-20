@@ -1,6 +1,6 @@
 name = "GivEmXL"
 uuid = "dcf505f5-2bf4-45cb-8fef-5f56a3c0e7fc"
-version = "0.2.8"
+version = "0.2.9"
 authors = ["Eben60"]
 
 [deps]
@@ -27,7 +27,7 @@ SavingResultsPlotsExt = "Plots"
 [compat]
 Compat = "4.10"
 DataFrames = "1.4"
-JuliaInterpreter = "0.9, 0.10"
+JuliaInterpreter = "0.9 - 0.11"
 Makie = ">=0.20"
 NativeFileDialog = "0.2"
 Plots = "1"
