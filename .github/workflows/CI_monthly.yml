@@ -2,6 +2,7 @@ name: CI_monthly
 on:
   push:
     tags: ['*']
+  pull_request:
   workflow_dispatch:
   schedule:
     - cron: '0 0 17 * *'
